@@ -12,11 +12,24 @@
   [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L218) (which might be the wrong place)
   is different. More checks (port) no newAddress
 
+-
+  [check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L285)
+  not in spec
+  
 - check
   [comment](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L137)
   ... also there is a typo
 
-
+-
+  [check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L191)
+  not is spec
+  
+- `TransferCoins`
+  vs. [SendCoins](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L224)
+  
+- [error
+  handling](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L225)
+  less specific than `FungibleTokenPacketAcknowledgement`
   
 ## Questions
 
@@ -24,6 +37,20 @@
   [that](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/bank/keeper/send.go#L140) work?
   
 - what is the motivation of [that](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/bank/keeper/send.go#L164)?
+  
+
+## Implementation Spec
+
+- not very complete. not sure what is the state, purpose. would be a
+  good place to link ICS spec to code (what do I find where), and
+  discuss discrepancies.
+
+- this
+  [spec](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/spec/04_messages.md)
+  is the closest to describing what is happinging in transfer
+  
+  
+
   
 # Raw Comments on ICS 20
 
@@ -95,13 +122,4 @@ prefix = "{packet.destPort}/{packet.destChannel}"
 
 - `capability = handler.bindPort(id)`; bindport not mentioned in ICS 25
 
-
-
-# Misc
-
-- this
-  [spec](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/spec/04_messages.md)
-  is the closest to describing what is happinging in transfer
-  
-  
 
