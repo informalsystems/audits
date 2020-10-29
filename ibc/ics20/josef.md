@@ -1,56 +1,56 @@
 # ICS 20
 
-# Raw Comments on Code
+## Spec does not match code
 
-- `createOutgoingPacket`
+- naming of functions inconsistent: `createOutgoingPacket`
   vs. [Transfer](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/msg_server.go#L12)
   
-- `denominatgion` + `amount` vs. Token. **how do tokes relate to amount**
-- `onChanOpenInit`? ... what I
-  [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L186)
-  (which might be the wrong place)
-  is different. More checks (port). no newAddress. claim capability
-- `onChanOpenTry`? ... what I
-  [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L218) (which might be the wrong place)
-  is different. More checks (port) no newAddress
-
--
-  [check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L285)
-  not in spec
+- `onChanOpenInit`
+  [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L186). Code
+  has more
+  checks (port) than spec. no newAddress. claim capability.
   
-- check
-  [comment](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L137)
-  ... also there is a typo
+- `onChanOpenTry`
+  [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L218).
+  Code has more checks (port) than spec. No call to newAddress.
 
--
-  [check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L191)
-  not is spec
+-  this[check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L285)
+  id not in spec
   
-- `TransferCoins`
+- this [check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L191)
+  is not is spec.
+  
+- Naming inconsistency: `TransferCoins`
   vs. [SendCoins](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L224)
   
 - [error
   handling](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L225)
   less specific than `FungibleTokenPacketAcknowledgement`
-  
--
-  [this](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L314)
-  looks a bit risky to maintain. In ICS `if (!ack.success)`. What happens if in
-  the future there are different error codes but only one success
-  code.
-  
+
 - Is
   [refundPacketToken](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L331)
   allowed to fail? If we cannot 'mint vouchers back to sender' there
   is a problem. No error handling in spec (in contrast to
   `onRecvPacket`. (I have the impression is something goes wrong here,
   one should do more, as it is a severe problem)
+
+## Code maintainability
+ 
+- having success logic on [default branch](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L314)
+  looks a bit risky to maintain in the future. In ICS it says `if (!ack.success)`. What happens if in
+  the future there are different error codes but only one success
+  code?
   
+ 
 
 
   
 ## Questions
 
+- check
+  [comment](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L137)
+  ... also there is a typo
+  
 - how does
   [that](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/bank/keeper/send.go#L140) work?
   
