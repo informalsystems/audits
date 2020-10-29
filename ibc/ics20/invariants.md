@@ -12,53 +12,6 @@ transition is partially executed.
 
 Ideally, a tool can help us to check those properties.
 
-## Differences between code and spec
-
-- FungibleTokenPacketData: amount is uint256 in spec and uint64 in the code.
-
-- PortID = "transfer" in keys.go and in the spec it binds to "bank"
-
-- `onChanOpenInit`:
-spec is missing this check:
-// Require portID is the portID transfer module is bound to
-boundPort := am.keeper.GetPort(ctx)
-	if boundPort != portID {
-		return sdkerrors.Wrapf(porttypes.ErrInvalidPort, "invalid port: %s, expected %s", portID, boundPort)
-	}
-
-- This code is also not covered by the spec:
-
-// Claim channel capability passed back by IBC module
-	if err := am.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
-		return err
-	}
-
-- This line of the spec 
-    // allocate an escrow address
-    `channelEscrowAddresses[channelIdentifier] = newAddress()`
-  does not exist in the code.
-  
-- Is `channelIdentifier` sufficient to identify escrow address? Who should be able
-  to control escrow address? Or it should be `channelIdentifier` and `portIdentifier`?
-  Or it should be just `portIdentifier`.  
-
-- In the spec it creates escrow address both on `onChanOpenInit` and on
-  `onChanOpenTry`. Is this ok? What if relay invokes `onChanOpenInit` and on
-  `onChanOpenTry` on the same channel end? `onChanOpenTry` will not fail if called
-  after `onChanOpenInit`, therefore, according to the spec, new escrow address is
-  created (although added to the map, i.e., overwriting the previous one so that's
-  probably not a problem.
-  
-## Questions
-
-- Why we need to specify `channel/port ids` when we are sending packet? Isn't this 
-ICS20 internal detail?
-- In `onRecvPacket` prefix should contain "/" at the end.
-- How minting vouchers can fail if balance insufficient (written in spec in `onRecvPacket`)?
-- There are no acks created in onRecvPacket in the code, while it exists at the spec level?
-Most probably at the code level error is returned and this is written as an ack, i.e., if nil
-then it is success ack, otherwise failed ack.
- 
     
 ## ICS20 invariants
 
