@@ -1,3 +1,27 @@
+# ICS 20
+
+# Raw Comments on Code
+
+- `createOutgoingPacket` vs. Transfer
+- `denominatgion` + `amount` vs. Token. **
+- `onChanOpenInit`? ... what I found is different. More checks no newAddress
+- `onChanOpenTry`? ... what I found is different. More checks no newAddress
+
+- check
+  [comment](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L137)
+  ... also there is a typo
+
+
+  
+## Questions
+
+- how does
+  [that](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/bank/keeper/send.go#L140) work?
+  
+- what is the motivation of [that](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/bank/keeper/send.go#L164)?
+  
+# Raw Comments on ICS 20
+
 ## Generic review (verification) checks
 
 - Ocaps (object capabilities)
@@ -65,4 +89,14 @@ prefix = "{packet.destPort}/{packet.destChannel}"
 ## ICS 26
 
 - `capability = handler.bindPort(id)`; bindport not mentioned in ICS 25
+
+
+
+# Misc
+
+- this
+  [spec](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/spec/04_messages.md)
+  is the closest to describing what is happinging in transfer
+  
+  
 
