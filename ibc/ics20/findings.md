@@ -1,73 +1,21 @@
 # ICS 20
 
+## Findings Opened As Issues:
+
+- Discrepencies between spec and code and other improvements to the code: https://github.com/cosmos/cosmos-sdk/issues/7736
+- GetEscrowAddress pre-image could be a real public key: https://github.com/cosmos/cosmos-sdk/issues/7737
+
 ## Spec does not match code
 
-- naming of functions inconsistent: `createOutgoingPacket`
-  vs. [Transfer](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/msg_server.go#L12)
-  
-- `onChanOpenInit`
-  [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L186). Code
-  has more
-  checks (port) than spec. no newAddress. claim capability.
-  
-- `onChanOpenTry`
-  [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L218).
-  Code has more checks (port) than spec. No call to newAddress.
-
--  OnChanCloseInit [check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L285)
-  causes rollback in code but is NoOp in spec
-  
-- GetReceiveEnabled [check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L191) in OnReceivePacket is not in spec.
-  
-- Naming inconsistency: `TransferCoins`
-  vs. [SendCoins](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L224)
-  
 - [error
   handling](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L225)
   less specific than `FungibleTokenPacketAcknowledgement`
   - EB: Josef can you clarify? TransferCoins in the onRecvPacket spec does return an error, just like SendCoins in the code - a malicious sender chain could try to withdraw more coins than were ever escrowed. Maybe this should be considered a more severe error and worth closing the channel over?
 
-- [refundPacketToken](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L331) shouldn't be allowed to fail - there's no fallible operations in the spec, but there are methods that return errors in the code (ie. SendCoins and MintCoins). If we cannot 'mint vouchers back to sender' there
-  is a problem. No error handling in spec (in contrast to
-  `onRecvPacket`. (I have the impression is something goes wrong here,
-  one should do more, as it is a severe problem)
-
 - the logic of
   [genesis.go](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/genesis.go)
-  is not disussed in the spec
-  
-- `FungibleTokenPacketData`: amount is uint256 in spec and uint64 in the code.
-
-- module binds to "transfer" portIF in the code, and to "bank" in the spec
-
-- newAddress is used in the spec but not defined. escrowAccount is fetched based on channelId in the spec, and based on portId/channelId in the code
-
-- In the spec it creates escrow address both on `onChanOpenInit` and on
-  `onChanOpenTry`. With crossing-hellos we could have a safety problem according to this spec
-  as we can execute `onChanOpenInit` (creates escrow address E1), then `createOutgoingPacket` using E1,
-  then `onChanOpenTry` we creates a new escrow address E2 that replaces E1, so money is gone. It seems that at 
-  code level we don't have this problem as implementation does not follow spec, i.e., it generates escrow
-  account based on portId/channelID. But if someone follows the spec, then we have safety problem.
-  
-- In the spec `onRecvPacket` prefix should contain "/" at the end to be aligned with the code.
-
-- In `onRecvPacket` in the spec acknowledgemt packet is returned, while error is returned at the code level.   
-
-- `createOutgoingPacket` spec has unused `source` argument
-
-- Denom hashing and coin traces aren't mentioned in the spec but play an essential role - should at least link to ADR001
-
-  
-## Code maintainability
- 
-- having success logic on [default branch](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L314)
-  looks a bit risky to maintain in the future. In ICS it says `if (!ack.success)`. What happens if in
-  the future there are different error codes but only one success
-  code?
-  
-## Cryptography
-
-- Escrow address in code shares pre-image domain with public keys. Should use domain separation.
+  is not disussed in the spec.
+  - EB: this is outside scope of the ICS and will be the case for every module. Should be defined in the SDK IBC spec though.
 
 
   
