@@ -4,8 +4,8 @@
 
 - `createOutgoingPacket` vs. Transfer
 - `denominatgion` + `amount` vs. Token. **
-- `onChanOpenInit`? ... what I found is different. More checks no newAddress
-- `onChanOpenTry`? ... what I found is different. More checks no newAddress
+- `onChanOpenInit`? ... what I [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L186) is different. More checks no newAddress
+- `onChanOpenTry`? ... what I [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L218) is different. More checks no newAddress
 
 - check
   [comment](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L137)
