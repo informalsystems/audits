@@ -3,7 +3,7 @@
 # Raw Comments on Code
 
 - `createOutgoingPacket` vs. Transfer
-- `denominatgion` + `amount` vs. Token. **
+- `denominatgion` + `amount` vs. Token. **how do tokes relate to amount**
 - `onChanOpenInit`? ... what I
   [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L186)
   (which might be the wrong place)
@@ -30,6 +30,21 @@
 - [error
   handling](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L225)
   less specific than `FungibleTokenPacketAcknowledgement`
+  
+-
+  [this](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L314)
+  looks a bit risky to maintain. In ICS `if (!ack.success)`. What happens if in
+  the future there are different error codes but only one success
+  code.
+  
+- Is
+  [refundPacketToken](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L331)
+  allowed to fail? If we cannot 'mint vouchers back to sender' there
+  is a problem. No error handling in spec (in contrast to
+  `onRecvPacket`. (I have the impression is something goes wrong here,
+  one should do more, as it is a severe problem)
+  
+
   
 ## Questions
 
