@@ -2,7 +2,9 @@
 
 # Raw Comments on Code
 
-- `createOutgoingPacket` vs. Transfer
+- `createOutgoingPacket`
+  vs. [Transfer](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/msg_server.go#L12)
+  
 - `denominatgion` + `amount` vs. Token. **how do tokes relate to amount**
 - `onChanOpenInit`? ... what I
   [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L186)
@@ -45,6 +47,7 @@
   one should do more, as it is a severe problem)
   
 
+
   
 ## Questions
 
@@ -54,6 +57,9 @@
 - what is the motivation of [that](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/bank/keeper/send.go#L164)?
   
 
+- what is
+  [genesis.go](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/genesis.go)
+  
 ## Implementation Spec
 
 - not very complete. not sure what is the state, purpose. would be a
