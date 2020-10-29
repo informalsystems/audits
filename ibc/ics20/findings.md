@@ -38,6 +38,23 @@
   [genesis.go](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/genesis.go)
   is not disussed in the spec
   
+- `FungibleTokenPacketData`: amount is uint256 in spec and uint64 in the code.
+
+- module binds to "transfer" portIF in the code, and to "bank" in the spec
+
+- escrowAccount is fetched based on channelId in the spec, and based on portId/channelId in the code
+
+- In the spec it creates escrow address both on `onChanOpenInit` and on
+  `onChanOpenTry`. With crossing-hellos we could have a safety problem according to this spec
+  as we can execute `onChanOpenInit` (creates escrow address E1), then `createOutgoingPacket` using E1,
+  then `onChanOpenTry` we creates a new escrow address E2 that replaces E1, so money is gone. It seems that at 
+  code level we don't have this problem as implementation does not follow spec, i.e., it generates escrow
+  account based on portId/channelID. But if someone follows the spec, then we have safety problem.
+  
+- In the spec `onRecvPacket` prefix should contain "/" at the end to be aligned with the code.
+
+- In `onRecvPacket` in the spec acknowledgemt packet is returned, while error is returned at the code level.   
+  
 ## Code maintainability
  
 - having success logic on [default branch](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L314)
