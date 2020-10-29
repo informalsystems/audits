@@ -34,6 +34,10 @@
   `onRecvPacket`. (I have the impression is something goes wrong here,
   one should do more, as it is a severe problem)
 
+- the logic of
+  [genesis.go](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/genesis.go)
+  is not disussed in the spec
+  
 ## Code maintainability
  
 - having success logic on [default branch](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L314)
@@ -58,7 +62,7 @@
   
 
 - what is
-  [genesis.go](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/genesis.go)
+ 
   
 ## Implementation Spec
 
