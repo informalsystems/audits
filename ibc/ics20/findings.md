@@ -14,11 +14,10 @@
   [found](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L218).
   Code has more checks (port) than spec. No call to newAddress.
 
--  this[check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L285)
-  id not in spec
+-  OnChanCloseInit [check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/module.go#L285)
+  causes rollback in code but is NoOp in spec
   
-- this [check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L191)
-  is not is spec.
+- GetReceiveEnabled [check](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L191) in OnReceivePacket is not in spec.
   
 - Naming inconsistency: `TransferCoins`
   vs. [SendCoins](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L224)
@@ -26,10 +25,9 @@
 - [error
   handling](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L225)
   less specific than `FungibleTokenPacketAcknowledgement`
+  - EB: Josef can you clarify? TransferCoins in the onRecvPacket spec does return an error, just like SendCoins in the code - a malicious sender chain could try to withdraw more coins than were ever escrowed. Maybe this should be considered a more severe error and worth closing the channel over?
 
-- Is
-  [refundPacketToken](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L331)
-  allowed to fail? If we cannot 'mint vouchers back to sender' there
+- [refundPacketToken](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/applications/transfer/keeper/relay.go#L331) shouldn't be allowed to fail - there's no fallible operations in the spec, but there are methods that return errors in the code (ie. SendCoins and MintCoins). If we cannot 'mint vouchers back to sender' there
   is a problem. No error handling in spec (in contrast to
   `onRecvPacket`. (I have the impression is something goes wrong here,
   one should do more, as it is a severe problem)
@@ -42,7 +40,7 @@
 
 - module binds to "transfer" portIF in the code, and to "bank" in the spec
 
-- escrowAccount is fetched based on channelId in the spec, and based on portId/channelId in the code
+- newAddress is used in the spec but not defined. escrowAccount is fetched based on channelId in the spec, and based on portId/channelId in the code
 
 - In the spec it creates escrow address both on `onChanOpenInit` and on
   `onChanOpenTry`. With crossing-hellos we could have a safety problem according to this spec
@@ -54,6 +52,11 @@
 - In the spec `onRecvPacket` prefix should contain "/" at the end to be aligned with the code.
 
 - In `onRecvPacket` in the spec acknowledgemt packet is returned, while error is returned at the code level.   
+
+- `createOutgoingPacket` spec has unused `source` argument
+
+- Denom hashing and coin traces aren't mentioned in the spec but play an essential role - should at least link to ADR001
+
   
 ## Code maintainability
  
@@ -62,7 +65,9 @@
   the future there are different error codes but only one success
   code?
   
- 
+## Cryptography
+
+- Escrow address in code shares pre-image domain with public keys. Should use domain separation.
 
 
   
