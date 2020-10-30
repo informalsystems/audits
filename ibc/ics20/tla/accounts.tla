@@ -40,13 +40,6 @@ Accounts == GenSeq(MaxAccountLength)
 
 Amounts == 0..MaxAmount
 
-(*
- BankEntry == [
-  exists: BOOLEAN,
-  amount: Amounts
-]
-*)
-
 GetEscrowAccount(portId, channelId) == <<portId, channelId>>
 
 FungibleTokenPacketData == [
@@ -98,6 +91,7 @@ OnRecvPacketPre(packet) ==
        IN  /\ <<escrow, denom>> \in DOMAIN bank
            /\ bank[escrow, denom] >= amount
 
+
 BankWithAccount(abank, account, denom) ==
     IF <<account, denom>> \in DOMAIN abank 
     THEN abank
@@ -105,8 +99,9 @@ BankWithAccount(abank, account, denom) ==
           |-> IF x = <<account, denom>> 
               THEN 0
               ELSE bank[x] ]
+
        
- OnRecvPacketNext(packet) ==
+OnRecvPacketNext(packet) ==
    LET data == packet.data IN
    LET denom == data.denom IN
    LET amount == data.amount IN
@@ -121,17 +116,54 @@ BankWithAccount(abank, account, denom) ==
                 LET bankwithreceiver == BankWithAccount(bank, receiver, denomsuffix) IN            
                 bank' = [bankwithreceiver EXCEPT ![receiver, denomsuffix] = @ + amount, ![escrow, denom] = @ - amount]
             \* create new tokens with new denomination and transfer it to the receiver account
-            ELSE 
-                LET prefixedDenomination == <<packet.destPort, packet.destChannel>> \o denom IN
+           ELSE LET prefixedDenomination == <<packet.destPort, packet.destChannel>> \o denom IN
                 LET bankwithreceiver == BankWithAccount(bank, receiver, prefixedDenomination) IN   
                 bank' = [bankwithreceiver EXCEPT ![receiver,prefixedDenomination] = @ + amount]
    ELSE 
        /\ error' = TRUE
        /\ UNCHANGED bank
+
               
+\* the input is not a packet, but a packet can be generated from the input parameters        
+createOutgoingPacketPre(packet) ==
+   LET data == packet.data IN
+   LET denom == data.denom IN
+   LET sender == data.sender IN
+   LET amount == data.amount IN
+   LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
+   /\ \/ denom = NativeDenom
+      \/ /\ denom[1] = packet.sourcePort
+         /\ denom[2] = packet.sourceChannel
+   /\ amount > 0
+   /\ data.sender /= NullId
+   /\ <<escrow, denom>> \in DOMAIN bank  
+   /\ <<sender, denom>> \in DOMAIN bank
+   /\ bank[sender, denom] >= amount
+\* Josef made up the following
+   /\ IsSource(packet) => bank[escrow, denom] >= amount
         
-        
-        
+\* we don't actually send a packet but just update the accounts        
+createOutgoingPacketNext(packet) ==
+   LET data == packet.data IN
+   LET denom == data.denom IN
+   LET amount == data.amount IN
+   LET sender == data.sender IN
+   LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
+   IF createOutgoingPacketPre(packet)
+   THEN
+        /\ error' = FALSE
+        /\ IF IsSource(packet) 
+           THEN 
+                \* tokens are from other chain. We forward them.
+                \* burn vouchers in escrow account
+                bank' = [bank EXCEPT ![escrow, denom] = @ - amount]
+           ELSE 
+                \* tokens are from this chain
+                \* transfer tokens from sender into escrow account
+                bank' = [bank EXCEPT ![sender, denom] = @ - amount, ![escrow, denom] = @ + amount]
+   ELSE
+       /\ error' = TRUE
+       /\ UNCHANGED bank
 
 Init == 
   /\ \E fun \in [ 1..NInitBankAccounts -> (Accounts \X Denoms) ]:
@@ -151,7 +183,7 @@ Inv ==
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Oct 30 18:47:07 CET 2020 by widder
+\* Last modified Fri Oct 30 21:39:07 CET 2020 by widder
 \* Last modified Fri Oct 30 16:39:38 CET 2020 by andrey
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey
 
