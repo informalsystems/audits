@@ -15,10 +15,11 @@ CONSTANT
   MaxAmount,
   MaxDenomLength,
   MaxAccountLength,
-  NativeDenom
-
+  NativeDenom,
+  NInitBankAccounts
 
 VARIABLE
+  error,
   bank,
   p  \* we want to start with generating single packets 
 
@@ -39,13 +40,14 @@ Accounts == GenSeq(MaxAccountLength)
 
 Amounts == 0..MaxAmount
 
-BankEntry == [
+(*
+ BankEntry == [
   exists: BOOLEAN,
   amount: Amounts
 ]
+*)
 
 GetEscrowAccount(portId, channelId) == <<portId, channelId>>
-
 
 FungibleTokenPacketData == [
   sender: Accounts,
@@ -94,26 +96,62 @@ OnRecvPacketPre(packet) ==
   /\ IsSource(packet) =>  
        LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) 
        IN  /\ <<escrow, denom>> \in DOMAIN bank
-           /\ bank[escrow, denom].amount >= amount
+           /\ bank[escrow, denom] >= amount
+
+BankWithAccount(abank, account, denom) ==
+    IF <<account, denom>> \in DOMAIN abank 
+    THEN abank
+    ELSE [x \in DOMAIN bank \union {<<account, denom>>} 
+          |-> IF x = <<account, denom>> 
+              THEN 0
+              ELSE bank[x] ]
        
+ OnRecvPacketNext(packet) ==
+   LET data == packet.data IN
+   LET denom == data.denom IN
+   LET amount == data.amount IN
+   LET receiver == data.receiver IN
+   IF OnRecvPacketPre(packet) 
+   THEN 
+        /\ error' = FALSE
+        /\ IF IsSource(packet) 
+           \* transfer from the escrow acount to the receiver account
+           THEN LET denomsuffix == SubSeq(denom, 3, Len(denom)) IN
+                LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
+                LET bankwithreceiver == BankWithAccount(bank, receiver, denomsuffix) IN            
+                bank' = [bankwithreceiver EXCEPT ![receiver, denomsuffix] = @ + amount, ![escrow, denom] = @ - amount]
+            \* create new tokens with new denomination and transfer it to the receiver account
+            ELSE 
+                LET prefixedDenomination == <<packet.destPort, packet.destChannel>> \o denom IN
+                LET bankwithreceiver == BankWithAccount(bank, receiver, prefixedDenomination) IN   
+                bank' = [bankwithreceiver EXCEPT ![receiver,prefixedDenomination] = @ + amount]
+   ELSE 
+       /\ error' = TRUE
+       /\ UNCHANGED bank
+              
+        
+        
         
 
 Init == 
-  /\ \E S \in SUBSET (Accounts \X Denoms):
-       bank \in [ S -> Amounts ]
+  /\ \E fun \in [ 1..NInitBankAccounts -> (Accounts \X Denoms) ]:
+      bank \in [{fun[i]: i \in DOMAIN fun} -> Amounts]
   /\ p \in Packets
+  /\ error = FALSE
   
 Next ==
-  UNCHANGED <<p, bank>> 
+  /\ OnRecvPacketNext(p)
+  /\ UNCHANGED <<p>> 
 
 Inv == 
   \* /\ WellFormedPacket(p)
-  /\ Cardinality(DOMAIN bank) < 2
-  
+  \* /\ Cardinality(DOMAIN bank) < 2
+  /\ error = FALSE
 
 
 =============================================================================
 \* Modification History
+\* Last modified Fri Oct 30 18:47:07 CET 2020 by widder
 \* Last modified Fri Oct 30 16:39:38 CET 2020 by andrey
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey
 
