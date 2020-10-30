@@ -110,13 +110,15 @@ OnRecvPacketNext(packet) ==
    THEN 
         /\ error' = FALSE
         /\ IF IsSource(packet) 
-           \* transfer from the escrow acount to the receiver account
-           THEN LET denomsuffix == SubSeq(denom, 3, Len(denom)) IN
+           THEN 
+                \* transfer from the escrow acount to the receiver account
+                LET denomsuffix == SubSeq(denom, 3, Len(denom)) IN
                 LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
                 LET bankwithreceiver == BankWithAccount(bank, receiver, denomsuffix) IN            
                 bank' = [bankwithreceiver EXCEPT ![receiver, denomsuffix] = @ + amount, ![escrow, denom] = @ - amount]
-            \* create new tokens with new denomination and transfer it to the receiver account
-           ELSE LET prefixedDenomination == <<packet.destPort, packet.destChannel>> \o denom IN
+           ELSE 
+                \* create new tokens with new denomination and transfer it to the receiver account
+                LET prefixedDenomination == <<packet.destPort, packet.destChannel>> \o denom IN
                 LET bankwithreceiver == BankWithAccount(bank, receiver, prefixedDenomination) IN   
                 bank' = [bankwithreceiver EXCEPT ![receiver,prefixedDenomination] = @ + amount]
    ELSE 
@@ -142,6 +144,7 @@ createOutgoingPacketPre(packet) ==
 \* Josef made up the following
    /\ IsSource(packet) => bank[escrow, denom] >= amount
         
+        
 \* we don't actually send a packet but just update the accounts        
 createOutgoingPacketNext(packet) ==
    LET data == packet.data IN
@@ -165,6 +168,7 @@ createOutgoingPacketNext(packet) ==
        /\ error' = TRUE
        /\ UNCHANGED bank
 
+
 Init == 
   /\ \E fun \in [ 1..NInitBankAccounts -> (Accounts \X Denoms) ]:
       bank \in [{fun[i]: i \in DOMAIN fun} -> Amounts]
@@ -183,7 +187,7 @@ Inv ==
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Oct 30 21:39:07 CET 2020 by widder
+\* Last modified Fri Oct 30 21:47:33 CET 2020 by widder
 \* Last modified Fri Oct 30 16:39:38 CET 2020 by andrey
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey
 
