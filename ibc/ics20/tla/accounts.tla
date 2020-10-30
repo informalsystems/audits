@@ -141,9 +141,7 @@ createOutgoingPacketPre(packet) ==
    /\ <<escrow, denom>> \in DOMAIN bank  
    /\ <<sender, denom>> \in DOMAIN bank
    /\ bank[sender, denom] >= amount
-\* Josef made up the following
-   /\ IsSource(packet) => bank[escrow, denom] >= amount
-        
+       
         
 \* we don't actually send a packet but just update the accounts        
 createOutgoingPacketNext(packet) ==
@@ -158,8 +156,8 @@ createOutgoingPacketNext(packet) ==
         /\ IF IsSource(packet) 
            THEN 
                 \* tokens are from other chain. We forward them.
-                \* burn vouchers in escrow account
-                bank' = [bank EXCEPT ![escrow, denom] = @ - amount]
+                \* burn sender's money
+                bank' = [bank EXCEPT ![sender, denom] = @ - amount]
            ELSE 
                 \* tokens are from this chain
                 \* transfer tokens from sender into escrow account
@@ -187,7 +185,7 @@ Inv ==
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Oct 30 21:47:33 CET 2020 by widder
+\* Last modified Fri Oct 30 21:52:38 CET 2020 by widder
 \* Last modified Fri Oct 30 16:39:38 CET 2020 by andrey
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey
 
