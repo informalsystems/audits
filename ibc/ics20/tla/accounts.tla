@@ -13,27 +13,43 @@ CONSTANT
   Identifiers,
   NullId,
   MaxAmount,
-  MaxDenomLength
+  MaxDenomLength,
+  MaxAccountLength,
+  NativeDenom
 
 
 VARIABLE
+  bank,
   p  \* we want to start with generating single packets 
 
+a <: b == a
+
+UNROLL_DEFAULT_GenSeq == <<>> <: Seq(Int)
+UNROLL_TIMES_GenSeq == 2
 
 \* This produces denomination sequences up to the given bound
-RECURSIVE ProduceDenom(_)
-ProduceDenom(n) ==
+RECURSIVE GenSeq(_)
+GenSeq(n) ==
   IF n = 0 THEN { <<>> }
-  ELSE LET Shorter == ProduceDenom(n-1) IN
+  ELSE LET Shorter == GenSeq(n-1) IN
     { Append(s,x): x \in Identifiers, s \in Shorter } \union Shorter 
 
-Denoms == ProduceDenom(MaxDenomLength)
+Denoms == GenSeq(MaxDenomLength)
+Accounts == GenSeq(MaxAccountLength)
 
 Amounts == 0..MaxAmount
 
+BankEntry == [
+  exists: BOOLEAN,
+  amount: Amounts
+]
+
+GetEscrowAccount(portId, channelId) == <<portId, channelId>>
+
+
 FungibleTokenPacketData == [
-  sender: Identifiers,
-  receiver: Identifiers,
+  sender: Accounts,
+  receiver: Accounts,
   denom: Denoms,
   amount: Amounts
 ]
@@ -50,6 +66,10 @@ Packets == [
   data: FungibleTokenPacketData
 ]
 
+IsSource(packet) ==
+  packet.data.denom[1] = packet.sourcePort /\ packet.data.denom[2] = packet.sourceChannel
+
+
 WellFormedPacket(packet) ==
   /\ packet.sourcePort /= NullId
   /\ packet.sourceChannel /= NullId
@@ -59,23 +79,42 @@ WellFormedPacket(packet) ==
         packet.data.denom[i] /= NullId
   /\ packet.data.amount > 0
   /\ Len(packet.data.denom) % 2 = 1 
-  /\ Len(packet.data.denom) > 1 => 
-       packet.data.denom[1] = packet.sourcePort /\ packet.data.denom[2] = packet.sourceChannel
+  /\ Len(packet.data.denom) > 1 => IsSource(packet)
 
+
+OnRecvPacketPre(packet) ==
+  LET data == packet.data
+      denom == data.denom
+      amount == data.amount
+  IN
+  /\ denom /= NativeDenom
+  /\ amount > 0
+     \* what happens if there is no receiver account? 
+  /\ data.receiver /= NullId
+  /\ IsSource(packet) =>  
+       LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) 
+       IN  /\ <<escrow, denom>> \in DOMAIN bank
+           /\ bank[escrow, denom].amount >= amount
+       
+        
 
 Init == 
-  p \in Packets
+  /\ \E S \in SUBSET (Accounts \X Denoms):
+       bank \in [ S -> Amounts ]
+  /\ p \in Packets
   
 Next ==
-  UNCHANGED p 
+  UNCHANGED <<p, bank>> 
 
-Inv == ~WellFormedPacket(p)
+Inv == 
+  \* /\ WellFormedPacket(p)
+  /\ Cardinality(DOMAIN bank) < 2
   
 
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Oct 30 13:01:16 CET 2020 by andrey
+\* Last modified Fri Oct 30 16:39:38 CET 2020 by andrey
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey
 
 
