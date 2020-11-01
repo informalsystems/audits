@@ -24,6 +24,10 @@ The **audit team** is likely to consist of 5-7 people, preferably mixing persons
 
 It is to be understood that the proposed scheme can be flexed to fit particular circumstances. E.g., the sprint phases could be made 1/2/2 days, when the interactions between subsystem units are trickier than the units themselves; or a separate sprint could be devoted to analyze the interactions of a certain set of subsystems; or a separate sprint could be also devoted to the consolidation of knowledge about the whole system.
 
+### Example: IBC Audit
+
+The *system* is a combination of [IBC specs](https://github.com/cosmos/ics/tree/master/spec/) and [Cosmos SDK implementation](https://github.com/cosmos/cosmos-sdk/tree/master/x/ibc). The *audit period* was fixed to 1 month; the *audit team* consisted, for the first 1-week sprint, of Ethan, Zarko, Cezara, Josef, and Andrey. The subsystem of the first 1-week sprint was fixed to ICS-20 Token Transfer. The first sprint was the first ever audit sprint of Informal, so it didn't follow any procedure. In it's essence this was a *Discovery phase* performed by the audit group consisting of the whole audit team on the entirety of the ICS-20 subsystem.
+
 
 
 ## Decomposition
@@ -40,8 +44,15 @@ Decompose the analysis target into smaller, individually manageable units, and d
 
 ### Procedure 
 
-The initial decomposition is performed by small group or a single person, preferably having the most domain knowledge. They construct the initial model of the system as described above, and present it to the whole audit group. The goal of this initial discussion is to develop the shared and agreed upon understanding of the domain by all audit group members. During the discussion the other group members should try to develop their understanding by challenging the decomposers' decisions. It is likely that the discussion will allow to refine the decomposition model.
+The initial decomposition is performed by small group or a single person, preferably having the most domain knowledge. They construct the initial model of the system as described above, and present it to the whole audit team. The goal of this initial discussion is to develop the shared and agreed upon understanding of the domain by all audit team members. During the discussion the other team members should try to develop their understanding by challenging the decomposers' decisions. It is likely that the discussion will allow to refine the decomposition model.
 
+### Example: ICS-20 Audit
+
+For the first audit sprint, no decomposition of the ICS-20 was performed; which resulted in a suboptimal performance. A conceivable ICS-20 decomposition could be:
+
+* Top-level files: [handler](https://github.com/cosmos/cosmos-sdk/blob/master/x/ibc/applications/transfer/handler.go) and [handler_test](https://github.com/cosmos/cosmos-sdk/blob/master/x/ibc/applications/transfer/handler_test.go), [module](https://github.com/cosmos/cosmos-sdk/blob/master/x/ibc/applications/transfer/module.go) and [module_test](https://github.com/cosmos/cosmos-sdk/blob/master/x/ibc/applications/transfer/module_test.go), as well as the [client/cli directory](https://github.com/cosmos/cosmos-sdk/tree/master/x/ibc/applications/transfer/client/cli), and the [simulation directory](https://github.com/cosmos/cosmos-sdk/tree/master/x/ibc/applications/transfer/simulation).
+* The [keeper directory](https://github.com/cosmos/cosmos-sdk/tree/master/x/ibc/applications/transfer/keeper), and most importantly the [relay](https://github.com/cosmos/cosmos-sdk/blob/master/x/ibc/applications/transfer/keeper/relay.go) and [relay_test](https://github.com/cosmos/cosmos-sdk/blob/master/x/ibc/applications/transfer/keeper/relay_test.go) files.
+* The [types directory](https://github.com/cosmos/cosmos-sdk/tree/master/x/ibc/applications/transfer/types), and most importantly the [trace](https://github.com/cosmos/cosmos-sdk/blob/master/x/ibc/applications/transfer/types/trace.go) and [trace_test](https://github.com/cosmos/cosmos-sdk/blob/master/x/ibc/applications/transfer/types/trace_test.go) files, as well as the [ADR-01 Coin Source Tracing](https://github.com/cosmos/cosmos-sdk/blob/master/docs/architecture/adr-001-coin-source-tracing.md).
 
 
 ## Discovery
@@ -62,6 +73,16 @@ Develop a deep understanding of each subsystem unit. Codify the understanding in
 
 The subsystem unit is thoroughly reviewed by a small group of 1-3 persons with the most suitable qualifications for that task. Their main goal is to develop a mental model of the unit, and codify this model in TLA+. Other outcomes, while highly desirable, play a secondary role. During the phase duration the audit group meets on a by-need basis; with probably short synchonizations each day. The group should aim at codifying the unit model right away, as this could result in useful synergies with other audit groups, when they study the dependencies of their unit from the others.
 
+### Example: ICS-20 Audit
+
+For the first audit sprint, the discovery phase was performed for the entirety of the ICS-20 by all team members. This resulted in the following outcomes:
+* [Raw fidings](https://github.com/informalsystems/audits/blob/main/ibc/ics20/findings.md), and the later extracted issues on [Spec/code discrepancies](https://github.com/cosmos/cosmos-sdk/issues/7736) and [GetEscrowAddress pre-image](https://github.com/cosmos/cosmos-sdk/issues/7737)
+* [Invariants](https://github.com/informalsystems/audits/blob/main/ibc/ics20/invariants.md)
+* [Preliminary TLA+ model of token transfer](https://github.com/informalsystems/audits/blob/main/ibc/ics20/invariants.md)
+
+The above outcomes while being valuable, could be made more numerous and better structured, if the decomposition phase was performed before, and the individual subsystem units were addressed by smaller audit groups. E.g., the above TLA+ model could consist on two separate submodels, one for coin traces, and another on the transfer functions, with the later first written using the abstracted traces (i.e. the native denominations or stubs for denomination traces), and the actual coin trace model could be later plugged in instead of the abstract one.
+
+It should be noted also that at its present state, the TLA+ modeling is prohibitively complicated, and is available in full power only to a couple of Informal team members. We plan to address this by creating a TLA+ cookbook with the set of recipes for the most frequently arising modeling needs.
 
 
 
@@ -82,3 +103,7 @@ Consolidate individual knowledge pieces obtained by each audit group into a cohe
 ### Procedure 
 
 This phase happens when individual audit groups have gathered enough understanding and knowledge of their respective subsystem units. We assume that this has helped already to discover certain findings or bugs for each unit. This phase happens in intensive discussions either of the whole audit team, or of certain combinations of audit groups whose units actively interact with each other. Each audit group is supposed to present their model and findings; while others strive to internalize the presented knowledge and to challenge the presentation from their own point of view. It is anticipated that the subsystem units models will be refined as a result of the discussion. The main goal of the discussions is to obtain a coherent subsystem model, composed from subsystem units models in a modular way. Ideally, this model will  then be used to derive other artifacts, such as tests/test drivers/fuzzers; but it's possible that this activity is left either for another sprint or to the system audit group.
+
+### Example: ICS-20 Audit
+
+No consolidation phase was performed for the ICS-20 audit within the first audit sprint; as a result the knowledge is still fragmented between the audit team members.
