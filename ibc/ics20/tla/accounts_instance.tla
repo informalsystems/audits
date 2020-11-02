@@ -5,8 +5,9 @@ MaxAmount == 2
 MaxDenomLength== 3
 MaxAccountLength == 3
 NativeDenom == <<"bucky">>
+NInitBankAccounts == 3
 
-VARIABLES bank,p
+VARIABLES error, bank, p
 
 INSTANCE accounts
 

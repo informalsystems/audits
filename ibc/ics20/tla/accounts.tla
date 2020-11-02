@@ -25,13 +25,15 @@ VARIABLE
 
 a <: b == a
 
-UNROLL_DEFAULT_GenSeq == <<>> <: Seq(Int)
+AsAddress(seq) == seq <: Seq(STRING)
+
+UNROLL_DEFAULT_GenSeq == { AsAddress(<< >>) }
 UNROLL_TIMES_GenSeq == 2
 
 \* This produces denomination sequences up to the given bound
 RECURSIVE GenSeq(_)
 GenSeq(n) ==
-  IF n = 0 THEN { <<>> }
+  IF n = 0 THEN { AsAddress(<< >>) }
   ELSE LET Shorter == GenSeq(n-1) IN
     { Append(s,x): x \in Identifiers, s \in Shorter } \union Shorter 
 
@@ -40,7 +42,7 @@ Accounts == GenSeq(MaxAccountLength)
 
 Amounts == 0..MaxAmount
 
-GetEscrowAccount(portId, channelId) == <<portId, channelId>>
+GetEscrowAccount(portId, channelId) == AsAddress(<<portId, channelId>>)
 
 FungibleTokenPacketData == [
   sender: Accounts,
@@ -66,12 +68,12 @@ IsSource(packet) ==
 
 
 WellFormedPacket(packet) ==
-  /\ packet.sourcePort /= NullId
-  /\ packet.sourceChannel /= NullId
-  /\ packet.destPort /= NullId
-  /\ packet.destChannel /= NullId
+  /\ packet.sourcePort /= AsAddress(<<NullId>>)
+  /\ packet.sourceChannel /= AsAddress(<<NullId>>)
+  /\ packet.destPort /= AsAddress(<<NullId>>)
+  /\ packet.destChannel /= AsAddress(<<NullId>>)
   /\ \A i \in DOMAIN packet.data.denom:
-        packet.data.denom[i] /= NullId
+        packet.data.denom[i] /= AsAddress(<<NullId>>)
   /\ packet.data.amount > 0
   /\ Len(packet.data.denom) % 2 = 1 
   /\ Len(packet.data.denom) > 1 => IsSource(packet)
@@ -82,10 +84,10 @@ OnRecvPacketPre(packet) ==
       denom == data.denom
       amount == data.amount
   IN
-  /\ denom /= NativeDenom
+  /\ denom /= AsAddress(NativeDenom)
   /\ amount > 0
      \* what happens if there is no receiver account? 
-  /\ data.receiver /= NullId
+  /\ data.receiver /= AsAddress(<<NullId>>)
   /\ IsSource(packet) =>  
        LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) 
        IN  /\ <<escrow, denom>> \in DOMAIN bank
@@ -95,8 +97,8 @@ OnRecvPacketPre(packet) ==
 BankWithAccount(abank, account, denom) ==
     IF <<account, denom>> \in DOMAIN abank 
     THEN abank
-    ELSE [x \in DOMAIN bank \union {<<account, denom>>} 
-          |-> IF x = <<account, denom>> 
+    ELSE [x \in DOMAIN bank \union { <<account, denom>> } 
+          |-> IF x = <<account, denom>>
               THEN 0
               ELSE bank[x] ]
 
@@ -115,12 +117,17 @@ OnRecvPacketNext(packet) ==
                 LET denomsuffix == SubSeq(denom, 3, Len(denom)) IN
                 LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
                 LET bankwithreceiver == BankWithAccount(bank, receiver, denomsuffix) IN            
-                bank' = [bankwithreceiver EXCEPT ![receiver, denomsuffix] = @ + amount, ![escrow, denom] = @ - amount]
+                bank' = [bankwithreceiver
+                    EXCEPT ![receiver, denomsuffix] = @ + amount,
+                           ![escrow, denom] = @ - amount]
            ELSE 
                 \* create new tokens with new denomination and transfer it to the receiver account
-                LET prefixedDenomination == <<packet.destPort, packet.destChannel>> \o denom IN
-                LET bankwithreceiver == BankWithAccount(bank, receiver, prefixedDenomination) IN   
-                bank' = [bankwithreceiver EXCEPT ![receiver,prefixedDenomination] = @ + amount]
+                LET prefixedDenomination ==
+                    <<packet.destPort, packet.destChannel>> \o denom IN
+                LET bankwithreceiver ==
+                    BankWithAccount(bank, receiver, prefixedDenomination) IN   
+                bank' = [bankwithreceiver
+                    EXCEPT ![receiver,prefixedDenomination] = @ + amount]
    ELSE 
        /\ error' = TRUE
        /\ UNCHANGED bank
@@ -133,11 +140,11 @@ createOutgoingPacketPre(packet) ==
    LET sender == data.sender IN
    LET amount == data.amount IN
    LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
-   /\ \/ denom = NativeDenom
+   /\ \/ denom = AsAddress(NativeDenom)
       \/ /\ denom[1] = packet.sourcePort
          /\ denom[2] = packet.sourceChannel
    /\ amount > 0
-   /\ data.sender /= NullId
+   /\ data.sender /= AsAddress(<<NullId>>)
    /\ <<escrow, denom>> \in DOMAIN bank  
    /\ <<sender, denom>> \in DOMAIN bank
    /\ bank[sender, denom] >= amount
@@ -161,15 +168,18 @@ createOutgoingPacketNext(packet) ==
            ELSE 
                 \* tokens are from this chain
                 \* transfer tokens from sender into escrow account
-                bank' = [bank EXCEPT ![sender, denom] = @ - amount, ![escrow, denom] = @ + amount]
+                bank' = [bank EXCEPT ![sender, denom] = @ - amount,
+                                     ![escrow, denom] = @ + amount]
    ELSE
        /\ error' = TRUE
        /\ UNCHANGED bank
 
 
 Init == 
-  /\ \E fun \in [ 1..NInitBankAccounts -> (Accounts \X Denoms) ]:
-      bank \in [{fun[i]: i \in DOMAIN fun} -> Amounts]
+  /\ bank \in [(Accounts \X Denoms) -> Amounts]
+  \* use the following approach to scope the enumeration in TLC
+  \*/\ \E fun \in [ 1..NInitBankAccounts -> (Accounts \X Denoms) ]:
+  \*    bank \in [{fun[i]: i \in DOMAIN fun} -> Amounts]
   /\ p \in Packets
   /\ error = FALSE
   
