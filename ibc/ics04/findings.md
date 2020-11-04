@@ -31,4 +31,6 @@ in the code checks for strictly greater
   it returns error
 
 - `provableStore.delete(packetCommitmentPath(packet.sourcePort,
-  packet.sourceChannel, packet.sequence))` is not in [`AcknowledgePAcket`](https://github.com/cosmos/cosmos-sdk/blob/286e9bfbefabe215da11b27ca7e41f72c28bedbb/x/ibc/core/04-channel/keeper/packet.go#L480)
+  packet.sourceChannel, packet.sequence))` is not in
+  [`AcknowledgePAcket`](https://github.com/cosmos/cosmos-sdk/blob/286e9bfbefabe215da11b27ca7e41f72c28bedbb/x/ibc/core/04-channel/keeper/packet.go#L480). not
+  sure what changed [here](https://github.com/cosmos/cosmos-sdk/blob/286e9bfbefabe215da11b27ca7e41f72c28bedbb/x/ibc/core/04-channel/keeper/packet.go#L487)
