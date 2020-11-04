@@ -15,6 +15,7 @@ in the code checks for strictly greater
 
 - Is this OK [`if connectionEnd.GetState() != int32(connectiontypes.OPEN)
   {`](https://github.com/cosmos/cosmos-sdk/blob/286e9bfbefabe215da11b27ca7e41f72c28bedbb/x/ibc/core/04-channel/keeper/packet.go#L179)
+  ... also in line [441](https://github.com/cosmos/cosmos-sdk/blob/286e9bfbefabe215da11b27ca7e41f72c28bedbb/x/ibc/core/04-channel/keeper/packet.go#L441)
   
 - [this](https://github.com/cosmos/cosmos-sdk/blob/286e9bfbefabe215da11b27ca7e41f72c28bedbb/x/ibc/core/04-channel/keeper/packet.go#L207)
   checks whether sequence number has been received before. I guess
@@ -28,3 +29,6 @@ in the code checks for strictly greater
   
 - in the spec recvPAcket returns a packet while in the [implementation](https://github.com/cosmos/cosmos-sdk/blob/286e9bfbefabe215da11b27ca7e41f72c28bedbb/x/ibc/core/04-channel/keeper/packet.go#L138)
   it returns error
+
+- `provableStore.delete(packetCommitmentPath(packet.sourcePort,
+  packet.sourceChannel, packet.sequence))` is not in [`AcknowledgePAcket`](https://github.com/cosmos/cosmos-sdk/blob/286e9bfbefabe215da11b27ca7e41f72c28bedbb/x/ibc/core/04-channel/keeper/packet.go#L480)
