@@ -1,8 +1,8 @@
 # Findings 
 
-x/capability: GetCapability deletes capabilities unexpectedly - https://github.com/cosmos/cosmos-sdk/issues/7805
+- x/capability: GetCapability deletes capabilities unexpectedly - https://github.com/cosmos/cosmos-sdk/issues/7805
 
-- Related: NewCapability does not respect rollback semantics. It maintains an in memory `capMap`
+    - Related: NewCapability does not respect rollback semantics. It maintains an in memory `capMap`
 from index to ocap. Ideally this would use the memory store, which does support
 roll back semantics, but stores operate on []bytes, and the unforgability of
 ocaps means we cant marshal them to bytes and back - we'd need a more general
@@ -29,7 +29,8 @@ Tooling opportunities:
 
 ## Notes
 
-modules get their own capability keepers - ie. "scoped"
+modules get their own capability keepers - ie. "scoped".
+
 but they all share a common persistentKey (persistent store), memKey (memory story), and capMap (memory map)
 
 InitializeAndSeal - no new scoped keepers
@@ -37,20 +38,24 @@ InitializeAndSeal - no new scoped keepers
 --
 
 app.go
+
 scope one keeper to the IBC module and one to the transfer module
 
 why is CapabilityKeeper a pointer?
 
 capability owner is a module + name
+
 capability is reference to struct{int}
 
 --- 
 
 what is the threat model in which we have to seal the keeper?
 
-modules can only create local capabilities
+modules can only create local capabilities.
+
 new capabilities are prefixed with module name - can't be changed after creation.
-no 2 scoped keepers can have the same name
+
+no 2 scoped keepers can have the same name.
 
 
 AuthenticateCapability uses the pointer value in the fwd lookup to ensure the given cap is known and matches the name
@@ -66,7 +71,8 @@ spec/01_concepts.md: the calling module must not call ClaimCapability after NewC
 
 capability use in ibc/core:
 
-only the copedKeeper used only in ics05 and ics04
+only the scopedKeeper used only in ics05 and ics04
+
 ics05:
 - BindPort calls NewCap
 - Authenticate calls AuthenticateCap
@@ -89,16 +95,6 @@ calls to host.ChannelCapabilityPath(packet.GetDestPort(), packet.GetDestChannel(
 - should just be a function of the channel directly ... otherwise switching between dest and source :(
 
 --- 
-
-ics 05
-
-ports are bound in genesis
-
-GetModuleOwner:
-- should use key for IBC module name not just "ibc" literal
-- when would 'ibc' not own it ? 
-
-----
 
 simapp
 
