@@ -26,14 +26,14 @@ GenSeq(n) ==
 
 DenomTraces == GenSeq(MaxDenomLength)
 
-MakeDenomTrace(port, channel, denom) == <<port, channel>> \o denom
+MakeDenomTrace(port, channel, denom) == AsAddress(<<port, channel>>) \o denom
 
 GetPort(trace) == trace[1]
 GetChannel(trace) == trace[2]
 GetDenom(trace) == SubSeq(trace, 3, Len(trace))
 
 
-NullDenomTrace == <<>>
+NullDenomTrace == AsAddress(<< >>)
 
 
 DENOM == INSTANCE denom
@@ -42,5 +42,5 @@ DenomTypeOK == DENOM!DenomTypeOK
 
 =============================================================================
 \* Modification History
-\* Last modified Thu Nov 05 14:57:42 CET 2020 by andrey
+\* Last modified Thu Nov 05 15:29:21 CET 2020 by andrey
 \* Created Thu Nov 05 13:22:40 CET 2020 by andrey
