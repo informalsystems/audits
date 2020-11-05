@@ -25,12 +25,12 @@ stores.
 
 At the IBC level, the resources we need access control for are ports
 and channels, since we want to ensure that only one module can bind a port (ie.
-initiate channels on that port), and that only the module which owns a channel can write on that channel.
-This allows modules on one chain to establish channels to modules on another
-chain, while limitting the damage that can be done by faulty or malicious modules on
-either chain.
+initiate channels on that port), and that only the module which owns a channel can act on that channel.
+This allows a module on one chain to establish channels to a particular module on another
+chain, while limitting the damage that can be done by other modules, on either chain, which
+may be faulty or malicious.
 
-With static modules built at compile time, this can be achieved using the
+For static modules built at compile time, this can be achieved using the
 existing static ocap system, where modules bind ports at initialization.
 However, we'd like to support dynamic modules, where new modules can be created
 at runtime by sending code to the blockchain - ie. smart contracts.
@@ -43,20 +43,24 @@ dynamic ocap system, which is implemented in `x/capability`.
 CapabilityKeeper, which tracks all created ocaps and their owners.
 An owner is a pair (Module, Name), where Module is the module that owns the ocap,
 and Name is the module's local name for the ocap. A module `M` is given a
-ScopedKeeper (derived from CapabilityKeeper) which can only create ocaps with owner (M, Name). Ocaps created by
+ScopedKeeper (derived from CapabilityKeeper) which can only create ocaps with owner (M, Name), for any Name. 
+Ocaps created by
 one module can be made accessible to other modules, who can then claim ownership.
 This allows an ocap to have multiple owners, so long as ownership was
-explicitly granted by an existing owner. For instance, if M created an ocap O called "honor",
-then O will have owner (M, "honor"). If M makes O available to another module
-M2, then M2 can claim ownership of O using the name "honour". Now O has two
-owners, (M, "honor") and (M2, "honour").
+explicitly granted by an existing owner. For instance, if M created an ocap O called "jogor",
+then O will have owner (M, "jogor"). If M makes O available to another module
+M2, then M2 can claim ownership of O using the name "yogurt". Now O has two
+owners, (M, "jogor") and (M2, "yogurt").
 
 The ocaps themselves are Go pointers. Since these are non-deterministic on each
-machine and are non-forgeable, they do not persist across process restarts.
-In order to identify ocaps and their owners, each ocap is associated with a
-global, incrementing index, and a map from index to owners is persisted in the
+machine and are non-forgeable, they are not persisted in any store and thus do not persist across process restarts.
+In order to identify ocaps and their owners during startup, each ocap is assigned a unique index from 
+a global, incrementing index variable, and a mapping from index to owners is persisted in the
 store. This allows the set of ocaps and their owners to be recomputed when a
 process restarts.
+
+See also the description in the
+[docs](https://docs.cosmos.network/master/modules/capability/).
 
 ### function NewCapability(ctx, name)
 
@@ -71,7 +75,8 @@ global index is I.
     - a new capability O is returned with O.Index = I 
     - (M, name) is added as an owner of I in the persistent store
     - global index is incremented to I+1 in the persistent store
-    - (M, O) is mapped to name, and (M, name) is mapped to index in the memory
+    - (M, O) is mapped to name in the memory store ("Fwd")
+    - (M, name) is mapped to index in the memory store ("Rev")
       store
     - I is mapped to O in memory
 
@@ -90,8 +95,8 @@ called by a module M.
 - postconditions:
     - if preconditions are not satisfied, abort
     - (M, name) is added as an owner of cap.Index in the persistent store
-    - (M, cap) is mapped to name, and (M, name) is mapped to cap.Index in the memory
-      store
+    - (M, cap) is mapped to name in the memory store
+    - (M, name) is mapped to cap.Index in the memory store
 
 ### function ReleaseCapability(ctx, cap)
 
@@ -101,11 +106,9 @@ called by a module M.
     - (M, cap) is mapped to some Name in the memory store
 
 - postconditions:
-    - mappings from (M, cap) to Name, and from (M, Name) to cap.Index are removed from the the memory
-      store
+    - mapping from (M, cap) to Name is removed from the memory store
+    - mapping from (M, Name) to cap.Index is removed from the the memory store
     - (M, Name) is removed as an owner of cap.Index in the persistent store
-    - if cap.Index has no more owners, cap.Index is removed from the persistent
-      store and the mapping from cap.Index to cap is removed from memory
-
-
-
+    - if cap.Index has no more owners:
+        - cap.Index is removed from the persistent store 
+        - mapping from cap.Index to cap is removed from memory
