@@ -139,11 +139,11 @@ Next ==
 Inv == 
   \* /\ WellFormedPacket(p)
   \* /\ Cardinality(DOMAIN bank) < 2
-  /\ count < 7
+  /\ count < 8
 
 
 =============================================================================
 \* Modification History
-\* Last modified Thu Nov 05 15:45:26 CET 2020 by andrey
+\* Last modified Thu Nov 05 16:41:40 CET 2020 by andrey
 \* Last modified Fri Oct 30 21:52:38 CET 2020 by widder
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey
