@@ -3,18 +3,19 @@
  * A primitive model for account arithmetics and token movement 
  * of the Cosmos SDK ICS20 Token Transfer
  * We completely abstract away many details, 
- * and want to focus on a minimal spec useful for testing  
+ * and want to focus on a minimal spec useful for testing
+ *
+ * We also try to make the model modular in that it uses
+ * denomination traces and accounts via abstract interfaces,
+ * outlined in denom.tla and account.tla
  *) 
 
 
-EXTENDS Integers, FiniteSets, Sequences, identifiers, denom, account_record
+EXTENDS Integers, FiniteSets, Sequences, identifiers, denom_record, account_record
 
 
 CONSTANT
   MaxAmount
-
-
-\* INSTANCE denom_record \* WITH Identifiers <- Identifiers, NullId <- NullId, Denoms <- Denoms
 
 VARIABLE
   error,
@@ -23,58 +24,9 @@ VARIABLE
   history,
   count
 
-(*
-Denoms == GenSeq(MaxDenomLength)
-Accounts == GenSeq(MaxAccountLength)
-
-
-*)
-
 a <: b == a
 
 Amounts == 0..MaxAmount
-
-
-(**
-   Abstraction of denomination traces
-   
-   We want to abstract from a concrete representation of denomination traces as sequences
-   into a datatype with prefix/suffix operations for construction/deconstruction of traces.
-   
-   The interface consists of: 
-    - MakeDenomTrace(port, channel, denom)
-    - GetPort(trace)
-    - GetChannel(trace)
-    - GetDenom(trace)
-*)
-
-(*
-AccountTraces == [
-  port: Identifiers,
-  channel: Identifiers,
-  account: Accounts
-]
-
-
-GetEscrowAccount(port, channel) == [
-  port |-> port,
-  channel |-> channel,
-  account |-> NullId
-]
-
-GetAccount(account) == [
-  port |-> NullId,
-  channel |-> NullId,
-  account |-> account
-]
-
-NullAccount == [
-  port |-> NullId,
-  channel |-> NullId,
-  account |-> NullId
-]
-
-*)
 
 GetSourceEscrowAccount(packet) == MakeEscrowAccount(packet.sourcePort, packet.sourceChannel)
 
@@ -97,11 +49,6 @@ Packets == [
   data: FungibleTokenPacketData
 ]
 
-(*
-IsSource(packet) ==
-  packet.data.denom[1] = packet.sourcePort /\ packet.data.denom[2] = packet.sourceChannel
-*)
-
 IsSource(packet) ==
   /\ GetPort(packet.data.denomTrace) = packet.sourcePort
   /\ GetChannel(packet.data.denomTrace) = packet.sourceChannel
@@ -123,7 +70,6 @@ OnRecvPacketPre(packet) ==
       denom == GetDenom(trace)
       amount == data.amount
   IN
-  \* /\ denom /= AsAddress(NativeDenom)
   /\ amount > 0
      \* what happens if there is no receiver account? 
   /\ data.receiver /= NullId
@@ -169,54 +115,8 @@ OnRecvPacketNext(packet) ==
        /\ error' = TRUE
        /\ UNCHANGED bank
 
-(*
-              
-\* the input is not a packet, but a packet can be generated from the input parameters        
-createOutgoingPacketPre(packet) ==
-   LET data == packet.data IN
-   LET denom == data.denom IN
-   LET sender == data.sender IN
-   LET amount == data.amount IN
-   LET escrow == GetSourceEscrowAccount(packet) IN
-   /\ \/ denom = AsAddress(NativeDenom)
-      \/ /\ denom[1] = packet.sourcePort
-         /\ denom[2] = packet.sourceChannel
-   /\ amount > 0
-   /\ data.sender /= AsAddress(<<NullId>>)
-   /\ <<escrow, denom>> \in DOMAIN bank  
-   /\ <<sender, denom>> \in DOMAIN bank
-   /\ bank[sender, denom] >= amount
-       
-        
-\* we don't actually send a packet but just update the accounts        
-createOutgoingPacketNext(packet) ==
-   LET data == packet.data IN
-   LET denom == data.denom IN
-   LET amount == data.amount IN
-   LET sender == data.sender IN
-   LET escrow == GetSourceEscrowAccount(packet) IN
-   IF createOutgoingPacketPre(packet)
-   THEN
-        /\ error' = FALSE
-        /\ IF IsSource(packet) 
-           THEN 
-                \* tokens are from other chain. We forward them.
-                \* burn sender's money
-                bank' = [bank EXCEPT ![sender, denom] = @ - amount]
-           ELSE 
-                \* tokens are from this chain
-                \* transfer tokens from sender into escrow account
-                bank' = [bank EXCEPT ![sender, denom] = @ - amount,
-                                     ![escrow, denom] = @ + amount]
-   ELSE
-       /\ error' = TRUE
-       /\ UNCHANGED bank
-
-*)
-
 
 Init == 
-  \* /\ bank \in [(AccountTraces \X DenomTraces) -> Amounts]
   /\ p \in Packets
   /\ bank = [ x \in {<<NullAccount, NullDenomTrace>>} |-> 0  ]
   /\ count = 0
@@ -246,6 +146,6 @@ Inv ==
 
 =============================================================================
 \* Modification History
-\* Last modified Thu Nov 05 14:27:09 CET 2020 by andrey
+\* Last modified Thu Nov 05 14:46:16 CET 2020 by andrey
 \* Last modified Fri Oct 30 21:52:38 CET 2020 by widder
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey

@@ -10,9 +10,6 @@ EXTENDS identifiers
 CONSTANT
   AccountIds
 
-ACCOUNT == INSTANCE account
-
-
 NullAccount == [
   port |-> NullId,
   channel |-> NullId,
@@ -37,10 +34,12 @@ MakeAccount(accountId) == [
   id |-> accountId
 ]
 
+
+ACCOUNT == INSTANCE account
 AccountTypeOK == ACCOUNT!AccountTypeOK
 
 
 =============================================================================
 \* Modification History
-\* Last modified Thu Nov 05 14:44:22 CET 2020 by andrey
+\* Last modified Thu Nov 05 14:49:10 CET 2020 by andrey
 \* Created Thu Nov 05 13:22:40 CET 2020 by andrey

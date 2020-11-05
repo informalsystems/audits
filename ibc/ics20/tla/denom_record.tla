@@ -10,8 +10,6 @@ EXTENDS identifiers
 CONSTANT
   Denoms
 
-Denom == INSTANCE denom
-
 DenomTraces == [
   port: Identifiers,
   channel: Identifiers,
@@ -35,10 +33,12 @@ NullDenomTrace == [
   denom |-> NullId
 ] 
 
-DenomTypeOK == Denom!DenomTypeOK
+
+DENOM == INSTANCE denom
+DenomTypeOK == DENOM!DenomTypeOK
 
 
 =============================================================================
 \* Modification History
-\* Last modified Thu Nov 05 14:44:36 CET 2020 by andrey
+\* Last modified Thu Nov 05 14:48:49 CET 2020 by andrey
 \* Created Thu Nov 05 13:22:40 CET 2020 by andrey
