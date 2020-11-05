@@ -25,7 +25,7 @@ GetPort(trace) == NullId
 GetChannel(trace) == NullId
 
 \* Get the denomination trace basic denomination
-GetDenom(trace) == NullId
+GetDenom(trace) == NullDenomTrace
 
 
 DenomTypeOK == 
@@ -35,12 +35,12 @@ DenomTypeOK ==
   /\ \A t \in DenomTraces:
        /\ GetPort(t) \in Identifiers
        /\ GetChannel(t) \in Identifiers
-       /\ GetDenom(t) \in Denoms
+       /\ GetDenom(t) \in DenomTraces
        
      
 
 
 =============================================================================
 \* Modification History
-\* Last modified Thu Nov 05 14:44:34 CET 2020 by andrey
+\* Last modified Thu Nov 05 15:49:23 CET 2020 by andrey
 \* Created Thu Nov 05 13:22:40 CET 2020 by andrey
