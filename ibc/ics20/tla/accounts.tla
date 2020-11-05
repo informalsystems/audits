@@ -160,17 +160,21 @@ createOutgoingPacketNext(packet) ==
    IF createOutgoingPacketPre(packet)
    THEN
         /\ error' = FALSE
-        /\ IF IsSource(packet) 
+        /\ IF ~IsSource(packet) 
+           \* This is how the check is encoded in ICS20 and the implementation.
+           \* The meaning is "IF denom = AsAddress(NativeDenom)" because of the following argument:
+           \* observe that due to the disjunction in createOutgoingPacketPre(packet), we have
+           \* ~IsSource(packet) /\ createOutgoingPacketPre(packet) => denom = AsAddress(NativeDenom)
            THEN 
-                \* tokens are from other chain. We forward them.
-                \* burn sender's money
-                bank' = [bank EXCEPT ![sender, denom] = @ - amount]
-           ELSE 
                 \* tokens are from this chain
                 \* transfer tokens from sender into escrow account
                 bank' = [bank EXCEPT ![sender, denom] = @ - amount,
                                      ![escrow, denom] = @ + amount]
-   ELSE
+           ELSE 
+                \* tokens are from other chain. We forward them.
+                \* burn sender's money
+                bank' = [bank EXCEPT ![sender, denom] = @ - amount]
+  ELSE
        /\ error' = TRUE
        /\ UNCHANGED bank
 
