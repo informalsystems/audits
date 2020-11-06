@@ -13,6 +13,8 @@ in the code checks for strictly greater
 
 ## To be discussed
 
+- The [figure](https://github.com/cosmos/ics/tree/master/spec/ics-004-channel-and-packet-semantics#packet-flow--handling) does not capture the flow of the acknowledgements
+
 - Is this OK [`if connectionEnd.GetState() != int32(connectiontypes.OPEN)
   {`](https://github.com/cosmos/cosmos-sdk/blob/286e9bfbefabe215da11b27ca7e41f72c28bedbb/x/ibc/core/04-channel/keeper/packet.go#L179)
   ... also in line [441](https://github.com/cosmos/cosmos-sdk/blob/286e9bfbefabe215da11b27ca7e41f72c28bedbb/x/ibc/core/04-channel/keeper/packet.go#L441)
