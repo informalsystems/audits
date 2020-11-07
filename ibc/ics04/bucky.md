@@ -1,7 +1,18 @@
+
+Findings:
+
+RecvPacket should AuthenticateCap. [This comment](https://github.com/cosmos/cosmos-sdk/blob/82f15f306e8a6a2e9ae3e122c348b579c43a3d92/x/ibc/core/04-channel/keeper/packet.go#L156) about it being done in the AnteHandler is not correct.
+
+TODO
+- look closely at how time is encoded - ie:
+    `if packet.GetTimeoutTimestamp() != 0 && uint64(ctx.BlockTime().UnixNano()) >= packet.GetTimeoutTimestamp() {`
+
+Notes
+
 why is sequence number an application level concern?
 
 SendPacket:
-- should be connectionKeeper.GetLatestHeight
+- should be a connectionKeeper.GetLatestHeight
 
 Inventory of x/capability use in ICS04:
 
