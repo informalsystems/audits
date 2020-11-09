@@ -1,0 +1,27 @@
+------------- Module packets ------------------
+
+EXTENDS Integers, FiniteSets, Sequences, identifiers, packetdata
+
+VARIABLE
+  error,
+  log,
+  p,  \* we want to start with generating single packets 
+  
+
+  Packets == [
+  timeoutHeight: integer
+  timeoutTimestamp: integer
+  sourcePort: Identifiers,
+  sourceChannel: Identifiers,
+  destPort: Identifiers,
+  destChannel: Identifiers,
+  data: PacketData
+]
+
+WellFormedPacket(packet) ==
+  /\ packet.sourcePort /= NullId
+  /\ packet.sourceChannel /= NullId
+  /\ packet.destPort /= NullId
+  /\ packet.destChannel /= NullIdv
+ 
+ 
