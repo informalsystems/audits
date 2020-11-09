@@ -9,6 +9,6 @@ ChannelEnd == [
   ordering: ChannelOrder
   counterpartyPortIdentifier: Identifier
   counterpartyChannelIdentifier: Identifier
-  connectionHops: [Identifier]
+  connectionHops: Identifier \* I guess this should eventually be a sequence
   version: string
 ]
