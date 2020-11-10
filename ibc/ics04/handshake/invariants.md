@@ -1,10 +1,7 @@
-# ICS 04
-
-    
-## ICS04 invariants
+# ICS 04 invariants
 
 ICS04 allows modules on different chains to exchange packets in a reliable and secure way. 
-If channel is ordered, then ordering of packet sent is respected on the delivery.
+If channel is ordered, the packets are sent/received in the FIFO order.
 
 Modules on different chains need to establish initial trust in the form of trusted header state.
 More precisely, given a module A on chainA and a module B on chainB, the module A needs to install 
@@ -12,68 +9,17 @@ a trusted header of the chainB that will be used as a source of trusted for the 
 and that is used to verify state transitions on the chainB. The same should be true in the opposite
 direction.
 
-We specify sourcePort to identify a module on the source chain we will use to send packet. Then we need
+We specify sourcePort to identify a module on the source chain we will use to send packets. Then we need
 to specify what is the destination: this is achieved by the sourceChannel. Note that sourceChannel has a 
-semantic of capturing what is the counterParty end, i.e., destPort and destChannel. We don't allow 
-sourcePort and sourceChannel to be used as channel end for multiple channels. 
+semantic of capturing what is the counterParty end, i.e., `destPort` and `destChannel`. We don't allow 
+sourcePort and sourceChannel to be used as a channel end for multiple channels. 
 `chanOpenInit` is a way to create channel end. It expresses intention to use this channel end to exchange data
 with the module identified with destPort and destChannel. Furthermore, it states that counterParty will be 
 verified using given connectionId. ConnectionId should capture agreement between modules what initial headers 
 are used as a channel root of trust. 
   
-Questions:
-
-- What is exactly meant with "delivered in order sent"? As packets has associated sequence numbers 
-we don't need to strictly send them in order (generate packets), we just need to deliver them in 
-the order of sequence numbers?
-- in ChanOpenTry and ChanOpenAck, what if proofHeight is negative?
-- what is a relation between version and counterpartyVersion in ChanOpenTry?Note that it's only used
-to check proof of the ChanOpenInit. Then in ChanOpenAck counterpartyVersion is adopted? What is then a point
-of version in ChanOpenInit?
-
-## Findings
-
-- in sendPacket, capability appears out of nowhere. It should probably be passed as a parameter. 
-- in sendPacket, these two checks seems not necessary:
-abortTransactionUnless(packet.destPort === channel.counterpartyPortIdentifier)
-abortTransactionUnless(packet.destChannel === channel.counterpartyChannelIdentifier). 
-- in chanOpenInit, portCapability is not defined. It should probably be passed as a parameter.
-- in ChanOpenInit, len(connectionEnd.GetVersions()) == 1 does not exist in the spec
-- in ChanOpenInit, connectionEnd.GetVersions()[0] should support required ordering does not exist in the spec
-
-- in ChanOpenTry ValidateBasic contains business logic: 
-L118, msgs.go: if msg.CounterpartyChosenChannelId != "" && msg.CounterpartyChosenChannelId != msg.DesiredChannelId {.
-There is a duplicate check in ChanOpenTry 
-- spec should be written from the msgHandler perspective, i.e., parameter of the handler should be
-message and we should specify msg basic validation and handler logic separately
-- are portIds and channelIds defined by the spec? If this is something channel specific, then it is weird that 
-we validate counterparty ids (inside channel.go, L57, channel.ValidateBasic)
-- in ChanOpenTry found at L117 is the same as found at line 200, so line 200 is redundant.
-It seems that at line 200, the check should be about channel capability and if it exists or not.
-
-- bad practise using "" as a special value in the code. It would be better defining it as a constant
-- in CounterpartyHops it would be better passing connectionId (or coonectionEnd as it already fetcher before) and not 
-channel as a parameter. Then line 281 can be removed.
-- counterpartyVersion overwrites local channel version. This does not look like handshake. 
 
 ### `function chanOpenInit`
-
-ChanOpenInit(
-	ctx sdk.Context,
-	order types.Order,
-	connectionHops []string,
-	portID,
-	channelID string,
-	portCap *capabilitytypes.Capability,
-	counterparty types.Counterparty,
-	version string) Capability, error
-
-type Counterparty struct {
-	// port on the counterparty chain which owns the other end of the channel.
-	PortId string 
-	// channel end on the counterparty chain
-	ChannelId string `
-}
 
 - preconditions:
     - order is ORDERED or UNORDERED
@@ -81,7 +27,7 @@ type Counterparty struct {
     - portID is valid identifier
     - channelId is valid identifier
     - calling module owns port capability for portID, i.e., portCap is valid capability for portID
-    - counterParty.PortID is valid identifier(?)
+    - counterParty.PortID is valid identifier
     - counterParty.ChannelId is valid identifier ("" has special semantics)
     - channelEnd identified with portID, channelID should be nil
     - connectionEnd identified with connectionHops[0] shound not be nil
@@ -101,24 +47,6 @@ type Counterparty struct {
     else abort
 
 ### `function chanOpenTry`
-
-TODO: Define msg and then specify what is done in ValidateBasic and what in the handler. 
-The spec should probably be written in that model and not like in the existing version.
-
-func (k Keeper) ChanOpenTry(
-	ctx sdk.Context,
-	order types.Order,
-	connectionHops []string,
-	portID,
-	desiredChannelID,
-	counterpartyChosenChannelID string,
-	portCap *capabilitytypes.Capability,
-	counterparty types.Counterparty,
-	version,
-	counterpartyVersion string,
-	proofInit []byte,
-	proofHeight exported.Height,
-) (*capabilitytypes.Capability, error)
 
 - preconditions:
     - order is ORDERED or UNORDERED
@@ -157,17 +85,6 @@ func (k Keeper) ChanOpenTry(
     
 ### `function chanOpenAck`
 
-func (k Keeper) ChanOpenAck(
-	ctx sdk.Context,
-	portID,
-	channelID string,
-	chanCap *capabilitytypes.Capability,
-	counterpartyVersion,
-	counterpartyChannelID string,
-	proofTry []byte,
-	proofHeight exported.Height,
-)
-
 - preconditions:
     - portID, channelID and counterpartyChannelID are valid identifiers
     - len(ProofTry) > 0
@@ -190,15 +107,6 @@ func (k Keeper) ChanOpenAck(
             
 
 ### `function chanOpenConfirm`
-
-func (k Keeper) ChanOpenConfirm(
-	ctx sdk.Context,
-	portID,
-	channelID string,
-	chanCap *capabilitytypes.Capability,
-	proofAck []byte,
-	proofHeight exported.Height,
-) error    
     
 - preconditions:
     - portID and channelID are valid identifiers
@@ -219,13 +127,6 @@ func (k Keeper) ChanOpenConfirm(
             
 ### `function chanCloseInit`
 
-func (k Keeper) ChanCloseInit(
-	ctx sdk.Context,
-	portID,
-	channelID string,
-	chanCap *capabilitytypes.Capability,
-)
-
  preconditions:
     - portID and channelID are valid identifiers
     - channelEnd (ch) identified with portID and channelID exists
@@ -239,15 +140,6 @@ func (k Keeper) ChanCloseInit(
     - persist channel with (portID, channelID) as keys
 
 ### `function chanCloseConfirm`
-
-func (k Keeper) ChanCloseConfirm(
-	ctx sdk.Context,
-	portID,
-	channelID string,
-	chanCap *capabilitytypes.Capability,
-	proofInit []byte,
-	proofHeight exported.Height,
-) error
 
 preconditions:
     - portID and channelID are valid identifiers
