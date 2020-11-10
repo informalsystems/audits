@@ -72,6 +72,7 @@ are used as a channel root of trust.
       ch.connectionHops == connectionEnd.CounterpartyHops, ch.version == counterpartyVersion    
     
 - postconditions        
+
     if preconditions hold
         - channelEnd is created with TRYOPEN state and passed parameters
         - channelEnd is persisted to the store with (portID, desiredChannelID) as keys
@@ -127,7 +128,7 @@ are used as a channel root of trust.
             
 ### `function chanCloseInit`
 
- preconditions:
+- preconditions:
     - portID and channelID are valid identifiers
     - channelEnd (ch) identified with portID and channelID exists
     - ch.State != CLOSED
@@ -141,7 +142,7 @@ are used as a channel root of trust.
 
 ### `function chanCloseConfirm`
 
-preconditions:
+- preconditions:
     - portID and channelID are valid identifiers
     - channelEnd (ch) identified with portID and channelID exists
     - ch.State != CLOSED
