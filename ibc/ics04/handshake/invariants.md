@@ -71,9 +71,8 @@ are used as a channel root of trust.
       ch.state == Init, ch.ordering == order, ch.counterParty == counterParty, 
       ch.connectionHops == connectionEnd.CounterpartyHops, ch.version == counterpartyVersion    
     
-- postconditions        
-
-    if preconditions hold
+- postconditions
+    - if preconditions hold
         - channelEnd is created with TRYOPEN state and passed parameters
         - channelEnd is persisted to the store with (portID, desiredChannelID) as keys
         - channel capability exists for name (portID, desiredChannelID) (if it was already created as part of
@@ -81,7 +80,7 @@ are used as a channel root of trust.
         - nextSequenceSend set to 1 in the store for key (portID, desiredChannelID)
         - nextSequenceRecv set to 1 in the store for key (portID, desiredChannelID)
         - nextSequenceAck set to 1 in the store for key (portID, desiredChannelID)
-    else abort
+    - else abort
     
     
 ### `function chanOpenAck`
