@@ -15,7 +15,7 @@ Ideally, a tool can help us to check those properties.
     
 ## ICS20 invariants
 
-- ICS20 allows modules A and B that are on different chains need to send tokens to each other.
+ICS20 allows modules A and B that are on different chains need to send tokens to each other.
 The communication channel between ICS20 modules is established by relying on unordered IBC channel. 
 There is a single channel established between ICS20 modules on two chains used for 
 communication.
