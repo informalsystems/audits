@@ -20,8 +20,9 @@ input to `PickVersion`
     - the client parameters are validated (by calling `ValidateSelfClient`)
     - getting a consensus state from a given height aborts on error 
     - the client state is verified, in addition to the client consensus state
+- in the code of `ConnOpenAck`, but not in the spec:
+    - there is handling when getting the connection end by ID from the provable store
     
-
 
 
 ## Code

@@ -1,12 +1,20 @@
 # ICS 03
 
-## SDK related things to check
-
-- TODO
-    
 ## ICS03 invariants
 
-TODO
+- If a connection end is in `INIT`, it can update its state either to `TRYOPEN` or `OPEN`
+- If a connection end is in `TRYOPEN`, it can update its state to `OPEN`, and it cannot update its state to `INIT`
+- If a connection end is in `OPEN`, it cannot update its state to `INIT` or to `TRYOPEN`
+- A connection between two chains `ChainA` and `ChainB` is identified by a unique pair of connection identifiers 
+`(ConnIDChainA, ConnIDChainB)`
+- Once a connection between two chains is open, the connection ends on both chains have the same version
+- The `clientID` and `connectionID` stored in the connection end at `ChainA` are equal to 
+the `counterpartyClientID` and `counterpartyConnectionID` stored in the connection end at `ChainB` (and vice versa)
+
+## ICS03 liveness
+- It is always the case that if `ConnOpenInit` is handled on `ChainA`, then eventually the connection ends on 
+both `ChainA` and `ChainB` are in state `OPEN`
+
 
 ### `function ConnOpenInit`
 
@@ -62,20 +70,25 @@ is smaller than the latest height of this chain,
     - the `counterpartyConnectionIdentifier` in the connection end is either an empty string, or equal to the `counterpartyIdentifier` from the `ConnOpenAck` datagram,
     - the connection end is either:
         - in state `INIT` and the `version` given as input is in the list of versions stored in the connection end, 
-        - or in state `TRYOPEN` and the `version` given as input is equal to the version stored in the connection end
-    - the counterparty connection end state can be verified
-    - the counterparty client state can be verified  
-    - the counterparty client consensus state can be verified  
+        - or in state `TRYOPEN` and the `version` given as input is equal to the version stored in the connection end,
+    - the counterparty connection state can be verified,
+    - the counterparty client state can be verified,  
+    - the counterparty client consensus state can be verified.
     
 - postconditions:        
     - the connection end identified by `identifier`:
-        - has its state updated to `OPEN`
-        - has the version set to `version` (from the datagram)
-        - has the `counterpartyConnectionIdentifier` set to `counterpartyConnectionID` (from the datagram)
+        - has its state updated to `OPEN`,
+        - has the version set to `version` (from the datagram),
+        - has the `counterpartyConnectionIdentifier` set to `counterpartyConnectionID` (from the datagram).
 
 
 ### `function ConnOpenConfirm`
 
 - preconditions:
-
+    - the connection end identified by `identifier` exists in the provable store, 
+    - the connection end is in state `TRYOPEN`
+    - the counterparty connection state can be verified.
+    
 - postconditions:        
+    - the connection end identified by `identifier` has its state updated to `OPEN`.
+    
