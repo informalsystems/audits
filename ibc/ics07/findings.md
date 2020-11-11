@@ -1,15 +1,81 @@
--
-  [headers](https://github.com/cosmos/ics/tree/master/spec/ics-007-tendermint-client#headers)
-   - contain height in unit64 while some lines above it is defined as
-     (epoch,height) pair
-   - next validator set missing
-   - actually is a signed header
-   
-  
--
+# ICS 007
+
+## Code
+
+
+- [ ] [unbondingperiod](https://github.com/cosmos/cosmos-sdk/blob/90e9370bd80d9a3d41f7203ddb71166865561569/x/ibc/light-clients/07-tendermint/types/misbehaviour_handle.go#L125)
+  shoud be `TrustingPeriod`. Since this solution is not specified in
+  the specification, we cannot check what should be there.
+
+- [ ] It appears that `splitStr[0]` might be easier than the
+  [expression](https://github.com/cosmos/cosmos-sdk/blob/90e9370bd80d9a3d41f7203ddb71166865561569/x/ibc/core/02-client/types/height.go#L163)
+  in the code. It appears unclear why the code operates on heights as strings?
+	  
+	  
+## Inconsistencies between code and spec
+
+- [ ] The part in the specification about
   [misbehavior](https://github.com/cosmos/ics/tree/master/spec/ics-007-tendermint-client#misbehaviour)
-  is outdated I guess.
+  is outdated. The current solution is not specified.
+     * the concept of trustedHeight (and trustedValidators) in the data structure
+	 * how validation of evidence is done
+	 * what the relayer has to submit (precompute) in order for an
+       evidence to be accepted by the client
+ 
+- [ ] There are some naming issues in [consensus
+  state](https://github.com/cosmos/ics/tree/master/spec/ics-007-tendermint-client#consensus-state):
+  what is called `ValidatorSet` in the spec is called
+  NextValidatorHash in the
+  [implementation](https://github.com/cosmos/cosmos-sdk/blob/116d0460fc329b6d96b615782c8d3f57e30aa505/x/ibc/light-clients/07-tendermint/types/consensus_state.go#L23).
   
+
+
+## Inconsistencies within the Spec
+
+- [ ] [headers](https://github.com/cosmos/ics/tree/master/spec/ics-007-tendermint-client#headers)
+     contain height in unit64 while some lines above it is defined as
+     (epoch,height) pair
+
+- [ ]  The note on ["would-have-been-fooled
+  logic](https://github.com/cosmos/ics/tree/master/spec/ics-007-tendermint-client#note-on-would-have-been-fooled-logic)
+  appears out
+  of  context in the text. When
+  restructuring the ICSs we should consider reorganizing the information.
+  
+- [ ] [upgrades](https://github.com/cosmos/ics/tree/master/spec/ics-007-tendermint-client#upgrades)
+  are Tendermint-specific and not mentioned in ICS002. 
+  
+- [ ] [Proposals](https://github.com/cosmos/cosmos-sdk/blob/90e9370bd80d9a3d41f7203ddb71166865561569/x/ibc/core/02-client/proposal_handler.go)
+  are  not discussed in the specification.
+  
+- [ ] [genesis](https://github.com/cosmos/cosmos-sdk/blob/90e9370bd80d9a3d41f7203ddb71166865561569/x/ibc/core/02-client/genesis.go)
+  is not discussed in the specification.
+  
+- [ ] The function [`VerifyClientState`](https://github.com/cosmos/cosmos-sdk/blob/90e9370bd80d9a3d41f7203ddb71166865561569/x/ibc/light-clients/07-tendermint/types/client_state.go#L169)
+  does not appear in the spec.
+  
+    
+- [ ]  This [error
+  handling](https://github.com/cosmos/cosmos-sdk/blob/90e9370bd80d9a3d41f7203ddb71166865561569/x/ibc/light-clients/07-tendermint/types/client_state.go#L224)
+  is not present in the [specification](https://github.com/cosmos/ics/tree/master/spec/ics-007-tendermint-client#state-verification-functions).
+  
+  
+- [ ] This [error
+  handling](https://github.com/cosmos/cosmos-sdk/blob/90e9370bd80d9a3d41f7203ddb71166865561569/x/ibc/light-clients/07-tendermint/types/client_state.go#L229)
+  is not present in the specification.
+  
+- In all the [Verify
+    functions](https://github.com/cosmos/ics/tree/master/spec/ics-007-tendermint-client#state-verification-functions)
+    the specification checks latest height and frozen. These checks
+    are done in the implementation in
+    [produceVerificationArgs](https://github.com/cosmos/cosmos-sdk/blob/90e9370bd80d9a3d41f7203ddb71166865561569/x/ibc/light-clients/07-tendermint/types/client_state.go#L451). Perhaps
+    the spec could mirror that modularity.
+	
+	
+
+
+# Raw comments
+
   
 - [Note on "would-have-been-fooled
   logic](https://github.com/cosmos/ics/tree/master/spec/ics-007-tendermint-client#note-on-would-have-been-fooled-logic). Out
@@ -83,8 +149,8 @@
         spec](https://github.com/cosmos/cosmos-sdk/blob/90e9370bd80d9a3d41f7203ddb71166865561569/x/ibc/core/02-client/types/msgs.go#L15). IT
         is only discussed in ICS07
 		
-  
--
+ 
+ -
   [`VerifyClientState`](https://github.com/cosmos/cosmos-sdk/blob/90e9370bd80d9a3d41f7203ddb71166865561569/x/ibc/light-clients/07-tendermint/types/client_state.go#L169)
   not in spec
   
