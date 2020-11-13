@@ -121,6 +121,47 @@ BankWithAccount(abank, chain, account, denom) ==
               ELSE bank[x] ]
 
        
+OnTimeoutPacketPre(chain, packet) ==  
+  LET data == packet.data
+      denom == data.denom
+      amount == data.amount
+  IN
+  /\ denom /= AsAddress(NativeDenom[chain])
+     \* what happens if there is no receiver account? 
+  /\ data.sender /= AsAddress(<<NullId>>)
+  /\ IsSource(packet) =>  
+       LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) 
+       IN  /\ <<chain, escrow, denom>> \in DOMAIN bank
+           /\ bank[chain, escrow, denom] >= amount
+ 
+
+OnTimeoutPacketNext(chain, packet) == 
+   LET data == packet.data IN
+   LET denom == data.denom IN
+   LET amount == data.amount IN
+   LET sender == data.sender IN
+   UNCHANGED pending /\ 
+   IF OnTimeoutPacketPre(chain, packet) 
+   THEN  
+        /\ error' = FALSE
+        /\ IF IsSource(packet) 
+            THEN 
+            \* transfer from the escrow acount to the sender account
+                LET denomsuffix == SubSeq(denom, 3, Len(denom)) IN
+                LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
+                LET bankwithreceiver == BankWithAccount(bank, chain, sender, denomsuffix) IN            
+                bank' = [bankwithreceiver
+                    EXCEPT ![chain, sender, denomsuffix] = @ + amount,
+                           ![chain, escrow, denom] = @ - amount]
+            ELSE 
+            \* mint back the money  TODO:check that onCreatePacket takes the return money into account
+             bank' = [bank EXCEPT ![chain, sender, denom] = @ + amount]
+   
+   ELSE 
+       /\ error' = TRUE
+       /\ UNCHANGED bank
+
+       
 OnRecvPacketNext(chain, packet) ==
    LET data == packet.data IN
    LET denom == data.denom IN
@@ -185,7 +226,7 @@ onLoss(chain, packet) ==
 
 IBCsend(chain, packet) ==
     \* what do we do about duplication
-\*    \/ onTimeOut(chain, packet)
+      \/ onTimeOut(chain, packet)
       \/ onSuccess(chain, packet)
 \*    \/ onScenarioLightClientAttack(chain, packet)
 \*    \/ onLoss(chain, packet)
@@ -241,6 +282,10 @@ OnSendNext ==
 OnRecvNext ==
     /\ upcomingEvent.function = "rcv"
     /\ OnRecvPacketNext(upcomingEvent.chain, upcomingEvent.packet)
+ 
+OnTimeoutNext ==
+    /\ upcomingEvent.function = "timeout"
+    /\ OnTimeoutPacketNext(upcomingEvent.chain, upcomingEvent.packet)
    
 \* Igor explains me later how to write that nicely.
 Next == 
@@ -261,27 +306,12 @@ Next ==
               /\ 
                  \/ OnSendNext /\ upcomingEvent' = upcomingEvent  
                  \/ OnRecvNext /\ upcomingEvent' = upcomingEvent  
-     \*   \/ OnAckNext(event)
-     \*   \/ OnTimeoutNext(event)
+                 \/ OnTimeoutNext /\ upcomingEvent' = upcomingEvent
+                \* \/ OnAckNext /\ upcomingEvent' = upcomingEvent
+       
  
 
 
-\*    IF step = "pick" THEN
-\*        \E event \in pending :
-\*            /\ upcomingEvent' = event
-\*            /\  IF AtMostOnce THEN
-\*                    pending' = pending \ {event} 
-\*                ELSE
-\*                    UNCHANGED pending
-\*            /\ step' = "execute"
-\*            /\ UNCHANGED <<bank, error >>
-\*    ELSE
-\*        /\ step' = "pick"
-\*        /\ \/  
-\*               OnSendNext /\ upcomingEvent' = upcomingEvent  
-\*           \/ OnRecvNext /\ upcomingEvent' = upcomingEvent  
-\*     \*   \/ OnAckNext(event)
-\*     \*   \/ OnTimeoutNext(event)
  
 
 Inv == 
@@ -292,7 +322,7 @@ Inv ==
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Nov 13 16:00:52 CET 2020 by c
+\* Last modified Fri Nov 13 18:22:37 CET 2020 by c
 \* Last modified Tue Nov 03 11:21:48 CET 2020 by andrey
 \* Last modified Fri Oct 30 21:52:38 CET 2020 by widder
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey
