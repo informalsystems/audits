@@ -16,13 +16,13 @@ CONSTANT
     NativeDenom,
     NInitBankAccounts,
     InitialEvent
-    InitialBanks
+    InitialBank
 
 VARIABLE
   error,
   bank,
-  pending  \* we want to start with generating single packets 
-  step
+  pending,  \* we want to start with generating single packets 
+  step,
   upcomingEvent
 
 a <: b == a
@@ -74,7 +74,6 @@ Events == [
 ]
 
 
-}
 IsSource(packet) ==
   packet.data.denom[1] = packet.sourcePort /\ packet.data.denom[2] = packet.sourceChannel
 
@@ -215,14 +214,17 @@ createOutgoingPacketNext(chain, packet) ==
 
 Init == 
   \* /\ bank \in [(Chains \X Accounts \X Denoms) -> Amounts]
-  /\ bank \in [(Chains \X Accounts \X Denoms) -> Amounts]
+  \* /\ bank \in [(Chains \X Accounts \X Denoms) -> Amounts]
   \* use the following approach to scope the enumeration in TLC
   \*/\ \E fun \in [ 1..NInitBankAccounts -> (Accounts \X Denoms) ]:
   \*    bank \in [{fun[i]: i \in DOMAIN fun} -> Amounts]
   /\ pending = InitialEvent
   /\ error = FALSE
   /\ step = "pick"
+  /\ bank = InitialBank
+  /\ upcomingEvent = "needtoinitialize"
   
+
 OnSendNext ==
     /\ upcomingEvent.function = "snd"
     /\ createOutgoingPacketNext(upcomingEvent.chain, upcomingEvent.packet)

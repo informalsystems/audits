@@ -1,4 +1,4 @@
------------------- MODULE xctx-instance --------
+------------------ MODULE xctx_instance --------
 
 Identifiers == {"","bucky","zarko"}
 NullId == ""
@@ -10,13 +10,12 @@ NativeDenom == ["A" |-> <<"atom">>, "B" |-> <<"bitcoin">>]
 InitialBank == [<<"A", "bucky", "atom">> |-> 5]
 InitialEvent == {}
 
-VARIABLE
-  error,
-  bank,
-  pending,  \* we want to start with generating single packets 
-  step,
+VARIABLES
+  error
+  bank
+  pending  
+  step
   upcomingEvent
 
 INSTANCE xctx
-
-=============================================================================
+ ===========================================================================
