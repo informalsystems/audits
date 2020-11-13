@@ -8,15 +8,18 @@ EXTENDS Integers, FiniteSets, Sequences
 
 CONSTANT
     Identifiers,
+    AccountIds,
     NullId,
     MaxAmount,
     MaxDenomLength,
     MaxAccountLength,
     Chains,
     NativeDenom,
-    NInitBankAccounts,
-    InitialEvent
-    InitialBank
+  \*  NInitBankAccounts,
+    BigBang,
+    InitialBank,
+    AtMostOnce,
+    AsChain
 
 VARIABLE
   error,
@@ -42,13 +45,14 @@ GenSeq(n) ==
 Denoms == GenSeq(MaxDenomLength)
 Accounts == GenSeq(MaxAccountLength)
 
+
 Amounts == 0..MaxAmount
 
 GetEscrowAccount(portId, channelId) == AsAddress(<<portId, channelId>>)
 
 FungibleTokenPacketData == [
-  sender: Accounts,
-  receiver: Accounts,
+  sender: AccountIds,
+  receiver: AccountIds,
   denom: Denoms,
   amount: Amounts
 ]
@@ -67,9 +71,12 @@ Packets == [
 
 Functions == { "snd", "rcv", "timeout", "ack" }
 
+\* we might extend spec to have per-event semantics
+IBCSemantics == {"at most once", "lossy", "light client attack"}
+
 Events == [
-    packet: Packets
-    function: Functions
+    packet: Packets,
+    function: Functions,
     chain : Chains
 ]
 
@@ -95,7 +102,7 @@ OnRecvPacketPre(chain, packet) ==
       denom == data.denom
       amount == data.amount
   IN
-  /\ denom /= AsAddress(NativeDenom(chain))
+  /\ denom /= AsAddress(NativeDenom[chain])
   /\ amount > 0
      \* what happens if there is no receiver account? 
   /\ data.receiver /= AsAddress(<<NullId>>)
@@ -108,8 +115,8 @@ OnRecvPacketPre(chain, packet) ==
 BankWithAccount(abank, chain, account, denom) ==
     IF <<chain, account, denom>> \in DOMAIN abank 
     THEN abank
-    ELSE [x \in DOMAIN bank \union { <<achain, account, denom>> } 
-          |-> IF x = <<achain, account, denom>>
+    ELSE [x \in DOMAIN bank \union { <<chain, account, denom>> } 
+          |-> IF x = <<chain, account, denom>>
               THEN 0
               ELSE bank[x] ]
 
@@ -151,7 +158,12 @@ createOutgoingPacketPre(chain, packet) ==
    LET sender == data.sender IN
    LET amount == data.amount IN
    LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
-   /\ \/ denom = AsAddress(NativeDenom(chain))
+   /\ \/ denom = AsAddress(NativeDenom[chain])
+
+
+
+
+
       \/ /\ denom[1] = packet.sourcePort
          /\ denom[2] = packet.sourceChannel
    /\ amount > 0
@@ -164,11 +176,11 @@ onTimeOut(chain, packet) ==
     pending' = pending \union {[packet |-> packet, function |-> "timeout", chain |-> chain]}
 
 onSuccess(chain, packet) ==
-    LET rcvChain = AsChain(destPort, destChannel) IN 
+    LET rcvChain == AsChain[packet.destPort, packet.destChannel] IN 
     pending' = pending \union {[packet |-> packet, function |-> "rcv", chain |-> rcvChain]}
 
 onScenarioLightClientAttack(chain, packet) ==
-    LET rcvChain = AsChain(destPort, destChannel) IN 
+    LET rcvChain == AsChain[packet.destPort, packet.destChannel] IN 
     pending' = pending \union {[packet |-> packet, function |-> "rcv", chain |-> rcvChain]}
                        \union {[packet |-> packet, function |-> "timeout", chain |-> chain]}
 
@@ -218,11 +230,11 @@ Init ==
   \* use the following approach to scope the enumeration in TLC
   \*/\ \E fun \in [ 1..NInitBankAccounts -> (Accounts \X Denoms) ]:
   \*    bank \in [{fun[i]: i \in DOMAIN fun} -> Amounts]
-  /\ pending = InitialEvent
+  /\ pending = {} \* here there real init should happen
   /\ error = FALSE
-  /\ step = "pick"
+  /\ step = "execute"
   /\ bank = InitialBank
-  /\ upcomingEvent = "needtoinitialize"
+  /\ upcomingEvent = BigBang
   
 
 OnSendNext ==
@@ -233,15 +245,19 @@ OnRecvNext ==
     /\ upcomingEvent.function = "rcv"
     /\ OnRecvPacketNext(upcomingEvent.chain, upcomingEvent.packet)
    
+\* Igor explains me later how to write that nicely.
 Next ==
     IF step = "pick" THEN
         \E event \in pending :
-            /\ upcomingEvent = event
-            /\ pending' = pending \ {event}
-            /\ step = "execute"
+            /\ upcomingEvent' = event
+            /\  IF AtMostOnce THEN
+                    pending' = pending \ {event} 
+                ELSE
+                    UNCHANGED pending
+            /\ step' = "execute"
             /\ UNCHANGED <<bank>>
     ELSE
-        /\ step = "pick"
+        /\ step' = "pick"
         /\ \/ OnSendNext 
            \/ OnRecvNext
      \*   \/ OnAckNext(event)
