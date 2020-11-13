@@ -152,24 +152,19 @@ OnRecvPacketNext(chain, packet) ==
 
               
 \* the input is not a packet, but a packet can be generated from the input parameters        
-createOutgoingPacketPre(chain, packet) ==
+createOutgoingPacketPre(chain, packet, pbank) ==
    LET data == packet.data IN
    LET denom == data.denom IN
    LET sender == data.sender IN
    LET amount == data.amount IN
    LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
    /\ \/ denom = AsAddress(NativeDenom[chain])
-
-
-
-
-
       \/ /\ denom[1] = packet.sourcePort
          /\ denom[2] = packet.sourceChannel
    /\ amount > 0
-   /\ data.sender /= AsAddress(<<NullId>>)
-   /\ <<chain, escrow, denom>> \in DOMAIN bank  
-   /\ <<chain, sender, denom>> \in DOMAIN bank
+   /\ data.sender /= NullId
+   /\ <<chain, escrow, denom>> \in DOMAIN pbank  
+   /\ <<chain, sender, denom>> \in DOMAIN pbank
    /\ bank[chain, sender, denom] >= amount
        
 onTimeOut(chain, packet) ==
@@ -201,7 +196,8 @@ createOutgoingPacketNext(chain, packet) ==
    LET amount == data.amount IN
    LET sender == data.sender IN
    LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
-   IF createOutgoingPacketPre(chain, packet)
+   LET bankwithescrow == BankWithAccount(bank, chain, escrow, denom) IN 
+   IF createOutgoingPacketPre(chain, packet,bankwithescrow)
    THEN
         /\ error' = FALSE
         /\ IBCsend(chain, packet)
@@ -213,12 +209,12 @@ createOutgoingPacketNext(chain, packet) ==
            THEN 
                 \* tokens are from this chain
                 \* transfer tokens from sender into escrow account
-                bank' = [bank EXCEPT ![chain, sender, denom] = @ - amount,
+                bank' = [bankwithescrow EXCEPT ![chain, sender, denom] = @ - amount,
                                      ![chain, escrow, denom] = @ + amount]
            ELSE 
                 \* tokens are from other chain. We forward them.
                 \* burn sender's money
-                bank' = [bank EXCEPT ![chain, sender, denom] = @ - amount]
+                bank' = [bankwithescrow EXCEPT ![chain, sender, denom] = @ - amount]
   ELSE
        /\ error' = TRUE
        /\ UNCHANGED <<pending, bank>>
@@ -258,8 +254,9 @@ Next ==
             /\ UNCHANGED <<bank>>
     ELSE
         /\ step' = "pick"
-        /\ \/ OnSendNext 
-           \/ OnRecvNext
+        /\ \/  
+               OnSendNext /\ upcomingEvent' = upcomingEvent  
+           \/ OnRecvNext /\ upcomingEvent' = upcomingEvent  
      \*   \/ OnAckNext(event)
      \*   \/ OnTimeoutNext(event)
  
@@ -272,6 +269,7 @@ Inv ==
 
 =============================================================================
 \* Modification History
+\* Last modified Fri Nov 13 14:58:09 CET 2020 by c
 \* Last modified Tue Nov 03 11:21:48 CET 2020 by andrey
 \* Last modified Fri Oct 30 21:52:38 CET 2020 by widder
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey
