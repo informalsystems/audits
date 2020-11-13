@@ -119,7 +119,7 @@ OnRecvPacketNext(chain, packet) ==
    LET denom == data.denom IN
    LET amount == data.amount IN
    LET receiver == data.receiver IN
-   IF OnRecvPacketPre(packet) 
+   IF OnRecvPacketPre(chain, packet) 
    THEN 
         /\ error' = FALSE
         /\ IF IsSource(packet) 
@@ -192,7 +192,7 @@ createOutgoingPacketNext(chain, packet) ==
    IF createOutgoingPacketPre(chain, packet)
    THEN
         /\ error' = FALSE
-        /\ IBCsend(packet)
+        /\ IBCsend(chain, packet)
         /\ IF ~IsSource(packet) 
            \* This is how the check is encoded in ICS20 and the implementation.
            \* The meaning is "IF denom = AsAddress(NativeDenom)" because of the following argument:

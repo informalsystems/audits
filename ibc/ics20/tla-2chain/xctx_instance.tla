@@ -5,8 +5,8 @@ NullId == ""
 MaxAmount == 2
 MaxDenomLength== 3
 MaxAccountLength == 3
-Chains = {"A", "B"}
-NativeDenom == ["A" |-> <<"atom">>, "B" |-> <<"bitcoin">>]
+Chains == {"A", "B"}
+NativeDenom == {["A" |-> <<"atom">>, "B" |-> <<"bitcoin">>]}
 InitialBank == [<<"A", "bucky", "atom">> |-> 5]
 InitialEvent == {}
 
@@ -18,4 +18,5 @@ VARIABLES
   upcomingEvent
 
 INSTANCE xctx
- ===========================================================================
+
+===========================================================================
