@@ -22,4 +22,6 @@ As a result
 
 - Coins were generated
   [here](https://github.com/cosmos/cosmos-sdk/blob/7e6978ae551bbed439c69178184dea0a25d0e747/x/ibc/applications/transfer/keeper/relay.go#L274)
+  before the error occurred that started that
+  
 - on the sender chain, we roll back due to the ack.
