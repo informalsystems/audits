@@ -1,12 +1,8 @@
-- An error in an external module
-[here](https://github.com/cosmos/cosmos-sdk/blob/7e6978ae551bbed439c69178184dea0a25d0e747/x/ibc/applications/transfer/keeper/relay.go#L224)
-(or
-[here](https://github.com/cosmos/cosmos-sdk/blob/7e6978ae551bbed439c69178184dea0a25d0e747/x/ibc/applications/transfer/keeper/relay.go#L277))
-or
-[here](
-https://github.com/cosmos/cosmos-sdk/blob/7e6978ae551bbed439c69178184dea0a25d0e747/x/ibc/applications/transfer/keeper/relay.go#L284)
+If
+[this](https://github.com/cosmos/cosmos-sdk/blob/7e6978ae551bbed439c69178184dea0a25d0e747/x/ibc/applications/transfer/keeper/relay.go#L284)
+fails 
 
-- is returned to
+- then an error is returned to
   [here](https://github.com/cosmos/cosmos-sdk/blob/7e6978ae551bbed439c69178184dea0a25d0e747/x/ibc/applications/transfer/module.go#L315)
   so that an ACK is set
 
@@ -21,8 +17,9 @@ https://github.com/cosmos/cosmos-sdk/blob/7e6978ae551bbed439c69178184dea0a25d0e7
 - thus, we return normally
   [here](https://github.com/cosmos/cosmos-sdk/blob/7e6978ae551bbed439c69178184dea0a25d0e747/x/ibc/core/keeper/msg_server.go#L466)
   
-- It seems that depending on the error that started the trace, we have
-  performed some state change at the receiver, while the sender will
-  roll back due to the ack returned.
-  
 
+As a result
+
+- Coins were generated
+  [here](https://github.com/cosmos/cosmos-sdk/blob/7e6978ae551bbed439c69178184dea0a25d0e747/x/ibc/applications/transfer/keeper/relay.go#L274)
+- on the sender chain, we roll back due to the ack.
