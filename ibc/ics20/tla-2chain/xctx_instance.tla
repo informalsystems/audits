@@ -19,7 +19,7 @@ packet |->
     data |-> [ 
         sender |-> "a1", 
         receiver |-> "a2", 
-        denom |-> "atom", 
+        denom |-> <<"atom">>, 
         amount |-> 3]
     ], 
 function |-> "snd", 

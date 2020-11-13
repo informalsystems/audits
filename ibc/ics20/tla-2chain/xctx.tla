@@ -159,11 +159,6 @@ createOutgoingPacketPre(chain, packet) ==
    LET amount == data.amount IN
    LET escrow == GetEscrowAccount(packet.sourcePort, packet.sourceChannel) IN
    /\ \/ denom = AsAddress(NativeDenom[chain])
-
-
-
-
-
       \/ /\ denom[1] = packet.sourcePort
          /\ denom[2] = packet.sourceChannel
    /\ amount > 0
