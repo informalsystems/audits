@@ -23,6 +23,7 @@ in the code checks for strictly greater
   Can the module's handler run first, like the spec? Or do we need to update the
   spec?
 - Similarly for AcknowledgePacket and AcknowledgementExecuted.
+- createOutgoingPacket spec has extra redundant source argument
 
 Error handling:
 - In the spec of recvPacket the call `provableStore.get(nextSequenceRecvPath(packet.destPort,
