@@ -1,0 +1,204 @@
+@!@!@STARTMSG 2262:0 @!@!@
+TLC2 Version 2.15 of Day Month 20?? (rev: eb3ff99)
+@!@!@ENDMSG 2262 @!@!@
+@!@!@STARTMSG 2187:0 @!@!@
+Running breadth-first search Model-Checking with fp 89 and seed 5821001394549641437 with 6 workers on 12 cores with 1214MB heap and 2730MB offheap memory [pid: 20308] (Mac OS X 10.15.7 x86_64, AdoptOpenJDK 14.0.1 x86_64, OffHeapDiskFPSet, DiskStateQueue).
+@!@!@ENDMSG 2187 @!@!@
+@!@!@STARTMSG 2220:0 @!@!@
+Starting SANY...
+@!@!@ENDMSG 2220 @!@!@
+Parsing file /Users/c/Documents/GitHub/audits/ibc/ics20/tla-2chain/xctx_instance.toolbox/Model_1/MC.tla
+Parsing file /Users/c/Documents/GitHub/audits/ibc/ics20/tla-2chain/xctx_instance.toolbox/Model_1/xctx_instance.tla
+Parsing file /private/var/folders/ns/hbkmcdjd7y90myw1w1sq36k80000gn/T/AppTranslocation/2E9D55D6-BCA7-4830-B14C-648DE0487F40/d/TLA+ Toolbox.app/Contents/Eclipse/plugins/org.lamport.tlatools_1.0.0.202004251858/tla2sany/StandardModules/TLC.tla
+Parsing file /Users/c/Documents/GitHub/audits/ibc/ics20/tla-2chain/xctx_instance.toolbox/Model_1/xctx.tla
+Parsing file /private/var/folders/ns/hbkmcdjd7y90myw1w1sq36k80000gn/T/AppTranslocation/2E9D55D6-BCA7-4830-B14C-648DE0487F40/d/TLA+ Toolbox.app/Contents/Eclipse/plugins/org.lamport.tlatools_1.0.0.202004251858/tla2sany/StandardModules/Integers.tla
+Parsing file /private/var/folders/ns/hbkmcdjd7y90myw1w1sq36k80000gn/T/AppTranslocation/2E9D55D6-BCA7-4830-B14C-648DE0487F40/d/TLA+ Toolbox.app/Contents/Eclipse/plugins/org.lamport.tlatools_1.0.0.202004251858/tla2sany/StandardModules/FiniteSets.tla
+Parsing file /private/var/folders/ns/hbkmcdjd7y90myw1w1sq36k80000gn/T/AppTranslocation/2E9D55D6-BCA7-4830-B14C-648DE0487F40/d/TLA+ Toolbox.app/Contents/Eclipse/plugins/org.lamport.tlatools_1.0.0.202004251858/tla2sany/StandardModules/Sequences.tla
+Parsing file /private/var/folders/ns/hbkmcdjd7y90myw1w1sq36k80000gn/T/AppTranslocation/2E9D55D6-BCA7-4830-B14C-648DE0487F40/d/TLA+ Toolbox.app/Contents/Eclipse/plugins/org.lamport.tlatools_1.0.0.202004251858/tla2sany/StandardModules/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module xctx
+Semantic processing of module xctx_instance
+Semantic processing of module TLC
+Semantic processing of module MC
+@!@!@STARTMSG 2219:0 @!@!@
+SANY finished.
+@!@!@ENDMSG 2219 @!@!@
+@!@!@STARTMSG 2185:0 @!@!@
+Starting... (2020-11-13 15:20:25)
+@!@!@ENDMSG 2185 @!@!@
+@!@!@STARTMSG 2189:0 @!@!@
+Computing initial states...
+@!@!@ENDMSG 2189 @!@!@
+@!@!@STARTMSG 2190:0 @!@!@
+Finished computing initial states: 1 distinct state generated at 2020-11-13 15:20:26.
+@!@!@ENDMSG 2190 @!@!@
+@!@!@STARTMSG 1000:1 @!@!@
+TLC threw an unexpected exception.
+This was probably caused by an error in the spec or model.
+See the User Output or TLC Console for clues to what happened.
+The exception was a java.lang.RuntimeException
+: Attempted to check equality of string "a1" with non-string:
+<<"bucky", "bucky">>
+@!@!@ENDMSG 1000 @!@!@
+@!@!@STARTMSG 2121:1 @!@!@
+The behavior up to this point is:
+@!@!@ENDMSG 2121 @!@!@
+@!@!@STARTMSG 2217:4 @!@!@
+1: <Initial predicate>
+/\ error = FALSE
+/\ bank = (<<"A", "a1", "atom">> :> 5)
+/\ pending = {}
+/\ step = "execute"
+/\ upcomingEvent = [ packet |->
+      [ sourcePort |-> "bucky",
+        sourceChannel |-> "bucky",
+        destPort |-> "zarko",
+        destChannel |-> "zarko",
+        data |->
+            [ sender |-> <<"a1">>,
+              receiver |-> <<"a2">>,
+              denom |-> <<"atom">>,
+              amount |-> 3 ] ],
+  function |-> "snd",
+  chain |-> "A" ]
+
+@!@!@ENDMSG 2217 @!@!@
+@!@!@STARTMSG 2147:1 @!@!@
+TLC was unable to fingerprint.
+
+Fingerprint Stack Trace:
+0) line 118, col 10 to line 121, col 28 of module xctx
+
+Reason:
+Attempted to check equality of string "a1" with non-string:
+<<"bucky", "bucky">>
+@!@!@ENDMSG 2147 @!@!@
+@!@!@STARTMSG 2201:0 @!@!@
+The coverage statistics at 2020-11-13 15:20:26
+@!@!@ENDMSG 2201 @!@!@
+@!@!@STARTMSG 2773:0 @!@!@
+<Init line 41, col 2 to line 41, col 14 of module xctx_instance>: 1:1
+@!@!@ENDMSG 2773 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 229, col 3 to line 233, col 28 of module xctx: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2772:0 @!@!@
+<Next line 41, col 2 to line 41, col 14 of module xctx_instance>: 0:0
+@!@!@ENDMSG 2772 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 41, col 2 to line 41, col 14 of module xctx_instance: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 41, col 2 to line 41, col 14 of module xctx_instance: 6
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 41, col 2 to line 41, col 14 of module xctx_instance: 2
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 41, col 2 to line 41, col 14 of module xctx_instance: 2
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 41, col 2 to line 41, col 14 of module xctx_instance: 1
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 41, col 2 to line 41, col 14 of module xctx_instance: 4
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 41, col 2 to line 41, col 14 of module xctx_instance: 2
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 246, col 8 to line 246, col 20 of module xctx: 2
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 248, col 16 to line 248, col 37 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 250, col 21 to line 250, col 48 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 252, col 21 to line 252, col 37 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 253, col 16 to line 253, col 32 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 254, col 16 to line 254, col 33 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 256, col 12 to line 256, col 25 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 237, col 8 to line 237, col 37 of module xctx: 2
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 200, col 7 to line 200, col 59 of module xctx: 2
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 202, col 12 to line 202, col 25 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 171, col 5 to line 171, col 92 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 175, col 5 to line 175, col 91 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 179, col 5 to line 180, col 92 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 183, col 5 to line 183, col 21 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 212, col 17 to line 213, col 74 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 217, col 17 to line 217, col 84 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 219, col 11 to line 219, col 23 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 220, col 11 to line 220, col 37 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 238, col 33 to line 238, col 51 of module xctx: 2
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 238, col 54 to line 238, col 73 of module xctx: 2
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 258, col 30 to line 258, col 59 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 131, col 12 to line 131, col 25 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 138, col 17 to line 140, col 64 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 147, col 17 to line 148, col 81 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 150, col 11 to line 150, col 23 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 151, col 11 to line 151, col 24 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2221:0 @!@!@
+  line 259, col 29 to line 259, col 58 of module xctx: 0
+@!@!@ENDMSG 2221 @!@!@
+@!@!@STARTMSG 2202:0 @!@!@
+End of statistics.
+@!@!@ENDMSG 2202 @!@!@
+@!@!@STARTMSG 2200:0 @!@!@
+Progress(1) at 2020-11-13 15:20:26: 1 states generated (59 s/min), 1 distinct states found (59 ds/min), 0 states left on queue.
+@!@!@ENDMSG 2200 @!@!@
+@!@!@STARTMSG 2199:0 @!@!@
+1 states generated, 1 distinct states found, 0 states left on queue.
+@!@!@ENDMSG 2199 @!@!@
+@!@!@STARTMSG 2186:0 @!@!@
+Finished in 1009ms at (2020-11-13 15:20:26)
+@!@!@ENDMSG 2186 @!@!@

@@ -126,7 +126,6 @@ OnRecvPacketNext(chain, packet) ==
    LET denom == data.denom IN
    LET amount == data.amount IN
    LET receiver == data.receiver IN
-   UNCHANGED pending /\ 
    IF OnRecvPacketPre(chain, packet) 
    THEN 
         /\ error' = FALSE
@@ -185,10 +184,10 @@ onLoss(chain, packet) ==
 
 IBCsend(chain, packet) ==
     \* what do we do about duplication
-\*    \/ onTimeOut(chain, packet)
-      \/ onSuccess(chain, packet)
-\*    \/ onScenarioLightClientAttack(chain, packet)
-\*    \/ onLoss(chain, packet)
+    \/ onTimeOut(chain, packet)
+    \/ onSuccess(chain, packet)
+    \/ onScenarioLightClientAttack(chain, packet)
+    \/ onLoss(chain, packet)
 
 \* we don't actually send a packet but just update the accounts        
 createOutgoingPacketNext(chain, packet) ==
@@ -227,7 +226,7 @@ Init ==
   \* use the following approach to scope the enumeration in TLC
   \*/\ \E fun \in [ 1..NInitBankAccounts -> (Accounts \X Denoms) ]:
   \*    bank \in [{fun[i]: i \in DOMAIN fun} -> Amounts]
-  /\ pending = {BigBang} \* here there real init should happen
+  /\ pending = {} \* here there real init should happen
   /\ error = FALSE
   /\ step = "execute"
   /\ bank = InitialBank
@@ -292,7 +291,7 @@ Inv ==
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Nov 13 16:00:52 CET 2020 by c
+\* Last modified Fri Nov 13 15:37:21 CET 2020 by c
 \* Last modified Tue Nov 03 11:21:48 CET 2020 by andrey
 \* Last modified Fri Oct 30 21:52:38 CET 2020 by widder
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey

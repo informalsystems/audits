@@ -227,7 +227,7 @@ Init ==
   \* use the following approach to scope the enumeration in TLC
   \*/\ \E fun \in [ 1..NInitBankAccounts -> (Accounts \X Denoms) ]:
   \*    bank \in [{fun[i]: i \in DOMAIN fun} -> Amounts]
-  /\ pending = {BigBang} \* here there real init should happen
+  /\ pending = {} \* here there real init should happen
   /\ error = FALSE
   /\ step = "execute"
   /\ bank = InitialBank
@@ -292,7 +292,7 @@ Inv ==
 
 =============================================================================
 \* Modification History
-\* Last modified Fri Nov 13 16:00:52 CET 2020 by c
+\* Last modified Fri Nov 13 16:00:29 CET 2020 by c
 \* Last modified Tue Nov 03 11:21:48 CET 2020 by andrey
 \* Last modified Fri Oct 30 21:52:38 CET 2020 by widder
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey

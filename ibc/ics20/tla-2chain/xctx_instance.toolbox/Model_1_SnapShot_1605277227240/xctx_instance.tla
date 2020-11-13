@@ -8,7 +8,7 @@ MaxDenomLength== 3
 MaxAccountLength == 3
 Chains == {"A", "B"}
 NativeDenom == [x \in {"A", "B"} |-> IF x = "A" THEN <<"atom">> ELSE <<"bitcoin">>]
-InitialBank == [x \in {<<"A", <<"a1">>, <<"atom">>>>} |-> 5]
+InitialBank == [x \in {<<"A", "a1", "atom">>} |-> 5]
 BigBang == [
 packet |-> 
     [
