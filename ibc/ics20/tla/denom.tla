@@ -27,6 +27,10 @@ GetChannel(trace) == NullId
 \* Get the denomination trace basic denomination
 GetDenom(trace) == NullDenomTrace
 
+\* Is this denomination trace a native denomination, or is it a prefixed trace
+\* Note that those cases are exclusive, but not exhaustive
+IsNativeDenomTrace(trace) == GetPort(trace) = NullId /\ GetChannel(trace) = NullId
+IsPrefixedDenomTrace(trace) == GetPort(trace) /= NullId /\ GetChannel(trace) /= NullId
 
 DenomTypeOK == 
   /\ NullDenomTrace \in DenomTraces

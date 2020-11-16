@@ -26,6 +26,8 @@ GetPort(trace) == trace.port
 GetChannel(trace) == trace.channel
 GetDenom(trace) == trace.denom
 
+IsNativeDenomTrace(trace) == GetPort(trace) = NullId /\ GetChannel(trace) = NullId /\ GetDenom(trace) /= NullId
+IsPrefixedDenomTrace(trace) == GetPort(trace) /= NullId /\ GetChannel(trace) /= NullId /\ GetDenom(trace) /= NullId
 
 NullDenomTrace == [
   port |-> NullId,
