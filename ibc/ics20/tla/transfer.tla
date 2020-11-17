@@ -58,7 +58,7 @@ WellFormedPacket(packet) ==
   /\ packet.destPort /= NullId
   /\ packet.destChannel /= NullId
   /\ packet.data.amount > 0
-  /\ \/ GetPort(packet.data.denomTrace) = NullId /\ GetChannel(packet.data.denomTrace) = NullId
+  /\ \/ IsNativeDenomTrace(packet.data.denomTrace)
      \/ IsSource(packet)
 
 
@@ -68,8 +68,10 @@ OnRecvPacketPre(packet) ==
       denom == GetDenom(trace)
       amount == data.amount
   IN
+  /\ WellFormedPacket(packet)
+  /\ IsNativeDenomTrace(trace) \/ IsPrefixedDenomTrace(trace)
   /\ amount > 0
-     \* what happens if there is no receiver account? 
+     \* if there is no receiver account, it is created by the bank
   /\ data.receiver /= NullId
   /\ IsSource(packet) =>  
        LET escrow == GetSourceEscrowAccount(packet)
@@ -91,25 +93,25 @@ OnRecvPacketNext(packet) ==
    LET denom == GetDenom(data.denomTrace) IN
    LET amount == data.amount IN
    LET receiver == data.receiver IN
-   IF OnRecvPacketPre(packet) 
-   THEN 
+   IF OnRecvPacketPre(packet)
+   THEN
         /\ error' = FALSE
-        /\ IF IsSource(packet) 
-           THEN 
+        /\ IF IsSource(packet)
+           THEN
                 \* transfer from the escrow acount to the receiver account
                 LET escrow == GetSourceEscrowAccount(packet) IN
-                LET bankwithreceiver == BankWithAccount(bank, MakeAccount(receiver), data.denomTrace) IN            
+                LET bankwithreceiver == BankWithAccount(bank, MakeAccount(receiver), data.denomTrace) IN
                 bank' = [bankwithreceiver
                     EXCEPT ![MakeAccount(receiver), data.denomTrace] = @ + amount,
                            ![escrow, data.denomTrace] = @ - amount]
-           ELSE 
+           ELSE
                 \* create new tokens with new denomination and transfer it to the receiver account
                 LET denomTrace == MakeDenomTrace(packet.destPort, packet.destChannel, denom) IN
                 LET bankwithreceiver ==
-                    BankWithAccount(bank, MakeAccount(receiver), denomTrace) IN   
+                    BankWithAccount(bank, MakeAccount(receiver), denomTrace) IN
                 bank' = [bankwithreceiver
                     EXCEPT ![MakeAccount(receiver),denomTrace] = @ + amount]
-   ELSE 
+   ELSE
        /\ error' = TRUE
        /\ UNCHANGED bank
 
@@ -121,7 +123,9 @@ Init ==
   /\ history = [
        n \in {0} |-> [
           error |-> FALSE,
-          packet |-> p
+          packet |-> p,
+          bankBefore |-> bank,
+          bankAfter |-> bank
        ]
      ]
   /\ error = FALSE
@@ -132,18 +136,18 @@ Next ==
   /\ OnRecvPacketNext(p)
   /\ history' = [ n \in DOMAIN history \union {count'} |->
        IF n = count' THEN
-         [ error |-> error', packet |-> p' ]
+         [ packet |-> p, error |-> error', bankBefore |-> bank, bankAfter |-> bank' ]
        ELSE history[n]
      ]
   
 Inv == 
   \* /\ WellFormedPacket(p)
   \* /\ Cardinality(DOMAIN bank) < 2
-  /\ count < 8
+  count /= 4 \* \/ error /= TRUE
 
 
 =============================================================================
 \* Modification History
-\* Last modified Thu Nov 05 16:41:40 CET 2020 by andrey
+\* Last modified Thu Nov 05 20:56:37 CET 2020 by andrey
 \* Last modified Fri Oct 30 21:52:38 CET 2020 by widder
 \* Created Thu Oct 29 20:45:55 CET 2020 by andrey
