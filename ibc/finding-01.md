@@ -19,4 +19,5 @@ It seems that the intuition of the logic in the specification is to highlight th
 
 ### Recommendation
 
-Change specification to allign with code.
+- Change specification to allign with code.
+- Due to the discrepance it appears that [OnAcknowledgement]() is dead code.
