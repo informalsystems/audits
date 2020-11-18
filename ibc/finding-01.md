@@ -20,4 +20,4 @@ It seems that the intuition of the logic in the specification is to highlight th
 ### Recommendation
 
 - Change specification to allign with code.
-- Due to the discrepance it appears that [OnAcknowledgement]() is dead code.
+- Due to the discrepance it appears that the error branch in [OnAcknowledgement]() is dead code. It should be removed from the specification and the code.
