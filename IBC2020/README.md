@@ -6,3 +6,4 @@
 * [Coverage](./4-coverage.md)
 * [Recommendations ](./5-recommendation-summary.md)
 * [Findings](./6-findings-summary.md)
+* [Report](./report.pdf)
