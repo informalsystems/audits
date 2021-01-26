@@ -20,7 +20,11 @@ working from commit hash
 repository, which implements the IBC relayer in Golang, was not in the scope.
 Throughout the process, we worked closely with the Interchain GmbH team in order to
 continuously integrate the outputs of the audit, so the code and the specification were moving targets during the audit.
-We want also to note that many of our recommendations were already addressed in the meantime.
+We want also to note that many of our recommendations were already addressed in the meantime 
+([SDK#8006](https://github.com/cosmos/cosmos-sdk/pull/8006), [SDK#7993](https://github.com/cosmos/cosmos-sdk/pull/7993),
+[SDK#8145](https://github.com/cosmos/cosmos-sdk/pull/8145), [SDK#8119](https://github.com/cosmos/cosmos-sdk/pull/8119), 
+[SDK#7967](https://github.com/cosmos/cosmos-sdk/pull/7967), [SDK#7770](https://github.com/cosmos/cosmos-sdk/pull/7770) 
+and [ICS#493](https://github.com/cosmos/ics/pull/493)).
 
 The audit was conducted in a top down approach, starting from the implementation of the token transfer application 
 ([ICS20](https://github.com/cosmos/ics/tree/master/spec/ics-020-fungible-token-transfer)), 
