@@ -27,7 +27,7 @@ We want also to note that many of our recommendations were already addressed in 
 and [ICS#493](https://github.com/cosmos/ics/pull/493)).
 
 The audit was conducted in a top down approach, starting from the implementation of the token transfer application 
-([ICS20](https://github.com/cosmos/ics/tree/master/spec/ics-020-fungible-token-transfer)), 
+([ICS20](https://github.com/cosmos/ibc/blob/master/spec/app/ics-020-fungible-token-transfer/README.md)), 
 and moving down the IBC stack analysing the implementations of channels and packets 
 ([ICS04](https://github.com/cosmos/ics/tree/master/spec/ics-004-channel-and-packet-semantics)), connections 
 ([ICS03](https://github.com/cosmos/ics/tree/master/spec/ics-003-connection-semantics)) and
