@@ -2,7 +2,7 @@
 
 Informal Systems apply a multi-layered, automated approach to our security
 audits for the blockchain ecosystem. Under the guidance of leading researchers
-in protocol design and verification and model-based verification, we leverage
+in protocol design, verification, and testing, we leverage
 our formal verification tools -- including
 [Apalache](https://apalache.informal.systems/) and [Model-Based
 Testing](https://github.com/informalsystems/modelator) -- to make distributed
