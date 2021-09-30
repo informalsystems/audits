@@ -16,3 +16,4 @@ Read more about our methods at
 * [Audit of IBC, 2020](./IBC2020)
 * [Audit for Injective, May-June 2021](./Injective2021-june)
 * [Audit for Interlay, Q2 of 2021](./Interlay2021Q2/informal-report-interlay-audit-2021Q2.pdf)
+* [Audit for Interlay, Q3 of 2021](./Interlay2021Q3/informal-report-interlay-audit-2021Q3.pdf)
