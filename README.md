@@ -13,9 +13,10 @@ Read more about our methods at
 
 ## Public Audit Reports
 
-* [Audit for Agoric, Q3 of 2021](./agoric2021Q3/informal-agoric-report-phase2.pdf)
+* [Formal Methods Assessment for Agoric, Q4 of 2021](./agoric2021Q4/informal-agoric-report-phase3.pdf)
+* [Formal Methods Assessment for Agoric, Q3 of 2021](./agoric2021Q3/informal-agoric-report-phase2.pdf)
 * [Audit for Interlay, Q3 of 2021](./Interlay2021Q3/informal-report-interlay-audit-2021Q3.pdf)
-* [Audit for Agoric, Q2 of 2021](./agoric2021Q2/informal-agoric-report-phase1.pdf)
+* [Formal Methods Assessment for Agoric, Q2 of 2021](./agoric2021Q2/informal-agoric-report-phase1.pdf)
 * [Audit for Interlay, Q2 of 2021](./Interlay2021Q2/informal-report-interlay-audit-2021Q2.pdf)
 * [Audit for Injective, May-June 2021](./Injective2021-june)
 * [Audit of IBC, 2020](./IBC2020)
