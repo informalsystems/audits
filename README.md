@@ -13,6 +13,7 @@ Read more about our methods at
 
 ## Public Audit Reports
 
+* [Audit for Evmos, Q4 of 2021](./Evmos2021Q4/informal-evmos-report-2021q4.pdf)
 * [Formal Methods Assessment for Agoric, Q4 of 2021](./agoric2021Q4/informal-agoric-report-phase3.pdf)
 * [Formal Methods Assessment for Agoric, Q3 of 2021](./agoric2021Q3/informal-agoric-report-phase2.pdf)
 * [Audit for Interlay, Q3 of 2021](./Interlay2021Q3/informal-report-interlay-audit-2021Q3.pdf)
