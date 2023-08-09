@@ -19,7 +19,7 @@ The third phase of the collaboration focused on the TGE smart contracts based on
 * Lockdrop phase
 
 ### Artifacts
-We have produced several artifacts:
+
 * [Audit report](2023-04-06 Audit Report - Neutron SDK DAO Wasmd TGE .pdf)
 
 
