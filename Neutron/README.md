@@ -7,12 +7,12 @@ The first phase of the collaboration focused on Neutron's chain modules
 * Admin module
 * Interchain queries and Interchain Transactions
 
-### Phase 2 - Neutron's governance and Tokenomics smart contracts
+### Phase 2 - Governance and Tokenomics smart contracts
 The second phase of the collaboration focused on the following smart contracts
 * DAO smart contracts
 * Tokenomics smart contracts
 
-### Phase 2 - Neutron's Token Generation Event smart contracts
+### Phase 3 - Token Generation Event smart contracts
 The third phase of the collaboration focused on the TGE smart contracts based on Astroport contracts for:
 * Airdrop phase
 * Liquidity pools bootstrapping phase
