@@ -25,7 +25,7 @@ Other findings are not requested by Osmosis team to be reported as issues.
 
 ## Analysis & testing document ## 
 
-Document describing ics-20 fungible token transfer properties and end-to-end test scenarios and their execution is located [here](../Q1/IF-OSMOSIS-TOKEN-TRANSFER-ANALYSIS-AND-TESTING.md). 
+Document describing ics-20 fungible token transfer properties and end-to-end test scenarios and their execution is located [here](Osmosis/Token-Transfer-Analysis-and-Testing.md). 
  
 
  
