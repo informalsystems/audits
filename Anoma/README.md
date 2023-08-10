@@ -14,11 +14,11 @@ The second half of the collaboration focused on designing a new feature: adding 
 
 ### Artifacts
 We have produced several artifacts:
-* [Pseudocode model without relegation](https://github.com/informalsystems/partnership-heliax/blob/trunk/2022/Q4/artifacts/PoS-pseudocode/PoS-model.md)
-* [TLA+ model without relegation](https://github.com/informalsystems/partnership-heliax/tree/trunk/2023/Q1/artifacts/PoS-tla)
+* [Pseudocode model without redelegation](https://github.com/informalsystems/partnership-heliax/blob/trunk/2022/Q4/artifacts/PoS-pseudocode/PoS-model.md)
+* [TLA+ model without redelegation](https://github.com/informalsystems/partnership-heliax/tree/trunk/2023/Q1/artifacts/PoS-tla)
 * [Blogpost](https://informal.systems/blog/checking-namada-proof-of-stake)
-* [Pseudocode model with relegation](https://github.com/informalsystems/partnership-heliax/blob/manuel/redelegation-q1/2023/Q1/artifacts/PoS-pseudocode/PoS-model-redelegation.md)
-* [Quint spec without relegation](https://github.com/informalsystems/partnership-heliax/tree/trunk/2023/Q2/artifacts/PoS-quint)
+* [Pseudocode model with redelegation](https://github.com/informalsystems/partnership-heliax/blob/manuel/redelegation-q1/2023/Q1/artifacts/PoS-pseudocode/PoS-model-redelegation.md)
+* [Quint spec without redelegation](https://github.com/informalsystems/partnership-heliax/tree/trunk/2023/Q2/artifacts/PoS-quint)
 * [Quint spec with redelegation](https://github.com/informalsystems/partnership-heliax/tree/manuel/quint-redelegation/2023/Q2/artifacts/PoS-quint)
 
 ### Methods used
