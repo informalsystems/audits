@@ -1,6 +1,6 @@
 # NMT Audit summary
 
-The audit process was comprised of three parts:
+The audit process in Q1/2022 was comprised of three parts:
 
 1. **Specification overview**
    - NMT spec
