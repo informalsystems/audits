@@ -1,4 +1,4 @@
-# Collaboration scope (Q1-Q2 2023)
+# Audit scope (Q1-Q2 2023)
 ### Phase 1 - Neutron's chain modules 
 The first phase of the collaboration focused on Neutron's chain modules
 * Consumer module of the Interchain Security
