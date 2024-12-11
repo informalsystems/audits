@@ -14,8 +14,8 @@ You may read more about our approach at the
 
 | Audit&nbsp;date(s) | Client | Audit report |
 | ----  | ----  | --- |
-| 2024-12-11  | [Neutron](https://neutron.org) | [Neutron: Dex Model](./Neutron/2024-12-11 Neutron Dex Model.pdf) |
-| 2024-12-11  | [Anoma](https://anoma.net) | [Anoma Audit Partnership: Proof of Stake](./Anoma/2024-12-11 Namada Governance & PGF.pdf) |
+| 2024-12-11  | [Neutron](https://neutron.org) | [Neutron: Dex Model](./Neutron/2024-12-11%20Neutron%20Dex%20Model.pdf) |
+| 2024-12-11  | [Anoma](https://anoma.net) | [Namada: Governance and Public Goods Funding](./Anoma/2024-12-11%20Namada%20Governance%20&%20PGF.pdf) |
 | 2023-11-11  | [Neutron](https://neutron.org) | [Neutron: Duality v0.5.0 + integration of Cosmos SDK 0.47](./Neutron/2023-11-11%20Audit%20Report%20-%20Neutron%20-%20Duality%20v0.5.0%20+%20integration%20of%20Cosmos%20SDK%200.47.pdf) |
 | 2023-11-05  | [Neutron](https://neutron.org) | [Neutron: Overrule + Liquidity Migration Smart Contracts](./Neutron/2023-11-05%20Audit%20Report%20-%20Neutron%20Smart%20Contracts%20-%20Overrule%20+%20Liquidity%20Migration.pdf) |
 | 2023-09-13  | [Celestia](https://celestia.org) | [Celestia: rsmt2d library](./Celestia/2023-09-13%20Audit%20Report%20Celestia%20rsmt2d%20library.pdf)   |
