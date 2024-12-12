@@ -1,4 +1,4 @@
-# Citation Guidelines
+# Publication Guidelines
 
 The purpose of this guide is to ensure consistency, professionalism, and proper
 attribution in all citations and references to our published reports and
@@ -12,6 +12,7 @@ including but not limited to:
 * Technical whitepapers 
 * Blog posts and technical write-ups 
 * Conference presentations and materials
+* Posts on Twitter, LinkedIn, Farcaster, or other social media sites
 
 By following these guidelines, we aim to:
 

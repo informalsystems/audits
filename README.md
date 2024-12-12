@@ -9,7 +9,7 @@ systems secure and resilient.
 You may read more about our approach at the
 [Security Services page](https://informal.systems/services/security-audits).
 
-Please refer to our [citation guidelines](./CITATION.md) before citing or referencing any of
+Please refer to our [publication guidelines](./PUBLICATION.md) before citing or referencing any of
 the reports published in this repository.
 
 ## Public Audit Reports
