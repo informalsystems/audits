@@ -91,6 +91,34 @@ These guidelines are designed to preserve the integrity of our work and prevent
 misunderstandings or misuses of our findings. If you have any questions about
 appropriate attribution, please contact your project manager.
 
+## Unacceptable Citation Formats and Consequences
+
+To maintain the integrity of our work, the following citation practices are
+considered unacceptable:
+
+- Implying Comprehensive Security:
+Any citation that suggests Informal Systems, Inc., has certified or guaranteed the complete security of a system or codebase unless explicitly stated in the report.
+
+- **Taking Findings Out of Context:** Selectively quoting findings in a way that distorts the overall conclusions or omits critical nuances.
+- **Omitting Proper Attribution:** Failing to credit Informal Systems, Inc., as the author or not including a link to the official publication.
+- **Using Reports for Endorsements:** Misrepresenting our findings to imply endorsement or approval of a system, product, or organization by Informal Systems, Inc.
+
+### Consequences of Violations:
+
+Before pursuing any consequences, Informal Systems, Inc., will first reach out
+to the individual or organization to request that the citation be corrected
+within 24 hours.
+
+If the violation is not corrected within 24 hours, these guidelines may result
+in the following actions:
+
+- **Public Statement:** Informal Systems, Inc., reserves the right to issue a public clarification to address any misrepresentation or misuse of our reports.
+- **Legal Action:** In cases of severe misrepresentation or unauthorized use, legal action may be pursued to protect our intellectual property and reputation.
+- **Revocation of Permissions:** Individuals or organizations violating these guidelines may lose access to our reports or other published materials.
+
+For questions regarding proper citation practices or to report potential misuse,
+please contact your project manager.
+
 ## Conclusion
 
 We at Informal Systems, Inc., are committed to delivering high-quality security
