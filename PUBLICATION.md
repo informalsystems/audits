@@ -32,7 +32,7 @@ published by Informal Systems, Inc., please use the following citation format:
 **For Security Audit Reports:**
 
 ```
-[Author(s)], "[Report Title]," Informal Systems, Inc., [Month Year], available at: [URL]
+"[Report Title]," Informal Systems, Inc., [Month Year], available at: [URL]
 ```
 
 *Example:*
@@ -75,7 +75,9 @@ When citing or referencing materials published by Informal Systems, Inc., it is
 critical to ensure accurate and appropriate attribution. Below are the
 guidelines for proper attribution:
 
-- **Do Not Generalize Findings:** Our security audit reports are limited to the specific scope and components reviewed at the time of the audit. They should not be used to assert or imply that an entire codebase or system is secure. Instead, references should explicitly note the scope of the audit as defined in the report.
+- **Do Not Generalize Findings:** Our security audit reports are limited to the specific scope, components, and version reviewed at the time of the audit. They should not be used to assert or imply that an entire codebase or system is secure. They should not be used to assert that all versions of a codebase or system are secure. Instead, references should explicitly note the scope and commit hash or version number of the audit as defined in the report.
+
+- **Do Not Generalize the Review Methodology Used:** Each audit relies on specific methodologies, such as manual review, static analysis, simulations, or modeling, which have inherent trade-offs. Do not misrepresent or generalize these approaches as providing complete security or exhaustive guarantees.
 
 - **Required Language:** When citing a report, use the following attribution language:
 
