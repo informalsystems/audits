@@ -14,6 +14,7 @@ You may read more about our approach at the
 
 | Audit&nbsp;date(s) | Client | Audit report | Announcement |
 | ----  | ----  | --- | --- |
+| 2025 | [Espresso](https://www.espressosys.com/) | [Espresso Q1 2025: Epoch Change Protocol](./Espresso/Espresso%20Q1%202025%20_%20Epoch%20Change%20Protocol%20Audit%20Report_Final.pdf) | |
 | 2025 | [Apex](https://apexfusion.org/) | [Apex Q1 2025: Reactor and Skyline critical path](./Apex/Apex%20Q1%202025%20_%20Reactor%20%26%20Skyline%20Critical%20Path%20Audit%20Report_Final.pdf) | |
 | 2025 | [Celestia](https://celestia.org) | [Celestia Q2 2025: CIP 31](./Celestia/Celestia%20Q2%202025_%20CIP-31%20Audit%20Report_Final.pdf) | |
 | 2025 | [Left Curve](https://left-curve.github.io/) | [Jellyfish Merkle Tree Specification](https://github.com/left-curve/left-curve/tree/main/grug/jellyfish-merkle/spec) | [Finding](https://github.com/left-curve/left-curve/pull/291) |
