@@ -14,7 +14,7 @@ You may read more about our approach at the
 
 | Audit&nbsp;date(s) | Client | Audit report | Announcement |
 | ----  | ----  | --- | --- |
-| 2025 | [Anoma](https://anoma.net) | [Anoma Q2 2025: E2E Shielded Transaction & Balance Consistency](.Anoma/Anoma%20Q2%202025%20_%20E2E%20Shielded%20Transaction%20%2B%20Balance%20Consistency%20Audit%20Report_Final.pdf) | |
+| 2025 | [Anoma](https://anoma.net) | [Anoma Q2 2025: E2E Shielded Transaction & Balance Consistency](./Anoma/Anoma%20Q2%202025%20_%20E2E%20Shielded%20Transaction%20%2B%20Balance%20Consistency%20Audit%20Report_Final.pdf) | |
 | 2025 | [Celestia](https://celestia.org) | [Celestia Q2 2025: High-Throughput Recovery Audit](./Celestia/Celestia%20Q2%202025%20_%20High-Throughput%20Recovery%20Audit%20Report_Final%20v2.pdf) | |
 | 2025 | [Espresso](https://www.espressosys.com/) | [Espresso Q1 2025: Epoch Change Protocol](./Espresso/Espresso%20Q1%202025%20_%20Epoch%20Change%20Protocol%20Audit%20Report_Final.pdf) | |
 | 2025 | [Apex](https://apexfusion.org/) | [Apex Q1 2025: Reactor and Skyline critical path](./Apex/Apex%20Q1%202025%20_%20Reactor%20%26%20Skyline%20Critical%20Path%20Audit%20Report_Final.pdf) | |
