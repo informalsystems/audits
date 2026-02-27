@@ -17,6 +17,8 @@ You may read more about our approach at the
 | 2026 | [Zenrock](https://zenrocklabs.io) | [Zenrock Q1 2026 - Hush Privacy Protocol](./Zenrock/Zenrock%20Q1%202026%20-%20Hush%20Privacy%20Protocol%20Audit%20Report.pdf) | |
 | 2025 | [Anoma](https://anoma.net) | [Anoma Q4 2025: RISC Zero RM & EVM Protocol Adapter](./Anoma/Anoma%20Q4%202025%20-%20RISC%20Zero%20RM%20%26%20EVM%20Protocol%20Adapter%20Audit%20Final%20Report_v2.pdf) | |
 | 2025 | [Anoma](https://anoma.net) | [Anoma Q2 2025: E2E Shielded Transaction & Balance Consistency](./Anoma/Namada%20Q2%202025_%20E2E%20Shielded%20Transaction%20%26%20Balance%20Consistency%20Audit%20Report_Final.pdf) | |
+| 2025 | [Neutron](https://neutron.org) | [Neutron Q3 2025: DEX Fractional](./Neutron/2025-07-30%20Neutron%20Q3%202025%20_%20DEX%20Fractional%20Banking%20Audit%20Report_Final.pdf) | |
+| 2025 | [Neutron](https://neutron.org) | [Neutron/Timewave Q3 2025: Valence Protocol](./Neutron/2025-07-18%20Neutron-Timewave%20Q2%202025%20_%20Valence%20Protocol%20Audit%20Report_Final.pdf) | |
 | 2025 | [Celestia](https://celestia.org) | [Celestia Q2 2025: High-Throughput Recovery Audit](./Celestia/Celestia%20Q2%202025%20_%20High-Throughput%20Recovery%20Audit%20Report_Final%20v2.pdf) | |
 | 2025 | [Espresso](https://www.espressosys.com/) | [Espresso Q1 2025: Epoch Change Protocol](./Espresso/Espresso%20Q1%202025%20_%20Epoch%20Change%20Protocol%20Audit%20Report_Final.pdf) | |
 | 2025 | [Apex](https://apexfusion.org/) | [Apex Q1 2025: Reactor and Skyline critical path](./Apex/Apex%20Q1%202025%20_%20Reactor%20%26%20Skyline%20Critical%20Path%20Audit%20Report_Final.pdf) | |
