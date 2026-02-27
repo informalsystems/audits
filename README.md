@@ -14,6 +14,7 @@ You may read more about our approach at the
 
 | Audit&nbsp;date(s) | Client | Audit report | Announcement |
 | ----  | ----  | --- | --- |
+| 2026 | [Zenrock](https://zenrocklabs.io) | [Zenrock Q1 2026 - Hush Privacy Protocol](./Zenrock/Zenrock%20Q1%202026%20-%20Hush%20Privacy%20Protocol%20Audit%20Report.pdf) | |
 | 2025 | [Anoma](https://anoma.net) | [Anoma Q4 2025: RISC Zero RM & EVM Protocol Adapter](./Anoma/Anoma%20Q4%202025%20-%20RISC%20Zero%20RM%20%26%20EVM%20Protocol%20Adapter%20Audit%20Final%20Report_v2.pdf) | |
 | 2025 | [Anoma](https://anoma.net) | [Anoma Q2 2025: E2E Shielded Transaction & Balance Consistency](./Anoma/Namada%20Q2%202025_%20E2E%20Shielded%20Transaction%20%26%20Balance%20Consistency%20Audit%20Report_Final.pdf) | |
 | 2025 | [Celestia](https://celestia.org) | [Celestia Q2 2025: High-Throughput Recovery Audit](./Celestia/Celestia%20Q2%202025%20_%20High-Throughput%20Recovery%20Audit%20Report_Final%20v2.pdf) | |
